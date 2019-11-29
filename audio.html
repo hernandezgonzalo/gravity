@@ -6,7 +6,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Gravity</title>
     <link rel="stylesheet" href="./css/style.css" />
-    <!--<script src="./js/main.js"></script>-->
   </head>
   <body>
     <div id="screen">
@@ -17,8 +16,17 @@
         style="border: 1px solid gray;"
       ></canvas>
     </div>
-
-    <!-- just for testing - MUST BE REMOVED -->
-    <script src="./js/main.js"></script>
+    <script>
+      window.onload = function() {
+        var music = new Audio("./audio/apocalyptic.ogg");
+        music.loop = true;
+        var jump = new Audio("./audio/highup.ogg");
+        document.addEventListener("keypress", keyPressHandler, false);
+        function keyPressHandler(e) {
+          music.play();
+          jump.play();
+        }
+      };
+    </script>
   </body>
 </html>

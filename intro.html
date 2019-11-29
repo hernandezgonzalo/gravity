@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Gravity</title>
+    <link rel="stylesheet" href="./css/style.css" />
+    <style>
+      @import url("https://fonts.googleapis.com/css?family=Frijole");
+    </style>
+  </head>
+  <body>
+    <div id="screen">
+      <span style="font-family: 'Frijole', cursive;"></span>
+      <canvas
+        id="canvas"
+        width="900"
+        height="600"
+        style="border: 1px solid gray;"
+      ></canvas>
+    </div>
+    <script>
+      window.onload = function() {
+        var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext("2d");
+        let speed = 0.1;
+        let bound = 0.1;
+        const MAXSPEED = 1;
+        let y = -10;
+
+        setInterval(() => {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          moveTitle();
+        }, 10);
+
+        function moveTitle() {
+          if (y > 260) bound = -0.01;
+          if (y < 240) bound = 0.01;
+          speed += bound;
+          if (speed > MAXSPEED) speed = MAXSPEED;
+          y += speed;
+          console.log("speed:", speed, "y:", y);
+          drawTitle(y);
+        }
+
+        function drawTitle(y) {
+          ctx.font = "80px Frijole";
+          ctx.fillStyle = "#111";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "bottom";
+          ctx.fillText("GRAVITY", canvas.width / 2, y);
+        }
+      };
+    </script>
+  </body>
+</html>
