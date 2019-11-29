@@ -7,12 +7,15 @@
     <title>Gravity</title>
     <link rel="stylesheet" href="./css/style.css" />
     <style>
-      @import url("https://fonts.googleapis.com/css?family=Frijole");
+      @font-face {
+        font-family: "Halo3";
+        src: url("./fonts/halo3.ttf");
+      }
     </style>
   </head>
   <body>
     <div id="screen">
-      <span style="font-family: 'Frijole', cursive;"></span>
+      <span style="font-family: 'Halo3';"></span>
       <canvas
         id="canvas"
         width="900"
@@ -27,25 +30,21 @@
         let speed = 0.1;
         let bound = 0.1;
         const MAXSPEED = 1;
-        let y = -10;
+        let y = 0;
 
         setInterval(() => {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
-          moveTitle();
+          drawTitle();
         }, 10);
 
-        function moveTitle() {
-          if (y > 260) bound = -0.01;
-          if (y < 240) bound = 0.01;
+        function drawTitle() {
+          if (y > 255) bound = -0.01;
+          if (y < 245) bound = 0.01;
           speed += bound;
           if (speed > MAXSPEED) speed = MAXSPEED;
           y += speed;
-          console.log("speed:", speed, "y:", y);
-          drawTitle(y);
-        }
 
-        function drawTitle(y) {
-          ctx.font = "80px Frijole";
+          ctx.font = "80px Halo3";
           ctx.fillStyle = "#111";
           ctx.textAlign = "center";
           ctx.textBaseline = "bottom";
