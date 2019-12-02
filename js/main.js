@@ -35,7 +35,7 @@ class Hero extends Character {
   }
 }
 
-class Enemey extends Character {
+class Enemy extends Character {
   constructor(x, y, width, height, image, sprites) {
     super(x, y, width, height, image, sprites);
     this.walk();
@@ -62,8 +62,8 @@ class Enemey extends Character {
 // characters creation
 var hero = new Hero(300, 100, 46, 60, "./img/hero-sprites.png", 24);
 var enemies = [];
-enemies.push(new Enemey(550, 100, 44.5, 60, "./img/enemy-sprites.png", 24));
-enemies.push(new Enemey(150, 100, 44.5, 60, "./img/enemy-sprites.png", 24));
+enemies.push(new Enemy(550, 100, 44.5, 60, "./img/enemy-sprites.png", 24));
+enemies.push(new Enemy(150, 100, 44.5, 60, "./img/enemy-sprites.png", 24));
 
 // -----------------------
 // DRAWING
@@ -156,26 +156,19 @@ function gravity(character) {
 
 function collision(character) {
   let sideCollision = false; // for enemies
+  let fallDown = true; // for enemies
 
-  // check if the character is colliding with the right side of a brick
   level.bricks.forEach(brick => {
     if (
       character.y <= brick[1] &&
       character.y + character.h >= brick[1] + level.brickSize
     ) {
+      // check if the character is colliding with the right side of a brick
       if (character.x < brick[0] + level.brickSize && character.x > brick[0]) {
         character.x = brick[0] + level.brickSize + 1;
         sideCollision = true;
       }
-    }
-  });
-
-  // check if the character is colliding with the left side of a brick
-  level.bricks.forEach(brick => {
-    if (
-      character.y <= brick[1] &&
-      character.y + character.h >= brick[1] + level.brickSize
-    ) {
+      // check if the character is colliding with the left side of a brick
       if (
         character.x + character.w >= brick[0] &&
         character.x < brick[0] + level.brickSize
@@ -184,18 +177,16 @@ function collision(character) {
         sideCollision = true;
       }
     }
-  });
 
-  // check if the character is colliding with the top of a brick
-  level.bricks.forEach(brick => {
     if (
       (character.x + 15 >= brick[0] &&
         character.x + 15 <= brick[0] + level.brickSize) ||
       (character.x + character.w - 15 >= brick[0] &&
         character.x + character.w - 15 <= brick[0] + level.brickSize)
     ) {
+      // check if the character is colliding with the top of a brick
       if (
-        character.y + character.h > brick[1] &&
+        character.y + character.h >= brick[1] &&
         character.y + character.h < brick[1] + level.brickSize
       ) {
         if (character.gravityAcc > 0) {
@@ -204,17 +195,7 @@ function collision(character) {
           character.gravityAcc = 1;
         }
       }
-    }
-  });
-
-  // check if the character is colliding with the bottom of a brick
-  level.bricks.forEach(brick => {
-    if (
-      (character.x + 15 >= brick[0] &&
-        character.x + 15 <= brick[0] + level.brickSize) ||
-      (character.x + character.w - 15 >= brick[0] &&
-        character.x + character.w - 15 <= brick[0] + level.brickSize)
-    ) {
+      // check if the character is colliding with the bottom of a brick
       if (character.y < brick[1] + level.brickSize && character.y > brick[1]) {
         if (character.gravityAcc < 0) {
           character.y = brick[1] + level.brickSize;
@@ -223,9 +204,30 @@ function collision(character) {
         }
       }
     }
+
+    // check if the enemy is going to fall and avoid it
+    if (
+      (character.isLookingLeft &&
+        character.x + 30 - level.brickSize >= brick[0] &&
+        character.x + 30 - level.brickSize <= brick[0] + level.brickSize) ||
+      (!character.isLookingLeft &&
+        character.x + character.w - 30 + level.brickSize >= brick[0] &&
+        character.x + character.w - 30 + level.brickSize <=
+          brick[0] + level.brickSize)
+    ) {
+      if (
+        (character.gravityAcc > 0 &&
+          character.y + character.h >= brick[1] &&
+          character.y + character.h < brick[1] + level.brickSize) ||
+        (character.gravityAcc < 0 &&
+          character.y < brick[1] + level.brickSize &&
+          character.y > brick[1])
+      )
+        fallDown = false;
+    }
   });
 
-  return sideCollision;
+  if (character instanceof Enemy) return sideCollision || fallDown;
 }
 
 // -----------------------
