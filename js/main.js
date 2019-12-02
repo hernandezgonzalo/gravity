@@ -1,5 +1,5 @@
 window.onload = setInterval(() => {
-  draw();
+  gameLoop();
 }, 10);
 
 var canvas = document.getElementById("canvas");
@@ -69,8 +69,9 @@ enemies.push(new Enemey(150, 100, 44.5, 60, "./img/enemy-sprites.png", 24));
 // DRAWING
 // -----------------------
 
-function draw() {
+function gameLoop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  level.drawBricks();
   keyboard(hero);
   enemies.forEach(enemy => {
     drawCharacter(enemy);
@@ -107,12 +108,12 @@ function drawCharacter(character) {
 function rotation(character) {
   // rotate when gravity changes
   if (character.isRotating) {
-    if (character.gravityAcc > -6 && character.gravityAcc < 0) {
-      let degrees = (character.gravityAcc + 1) * 36;
+    if (character.gravityAcc > -3 && character.gravityAcc < 0) {
+      let degrees = (character.gravityAcc + 1) * 90;
       if (character.isLookingLeft) degrees = -degrees;
       rotate(degrees);
-    } else if (character.gravityAcc < 6 && character.gravityAcc > 0) {
-      let degrees = (character.gravityAcc - 1) * 36 - 180;
+    } else if (character.gravityAcc < 3 && character.gravityAcc > 0) {
+      let degrees = (character.gravityAcc - 1) * 90 - 180;
       if (!character.isLookingLeft) degrees = -degrees;
       rotate(degrees);
     } else if (character.gravityAcc < 0) {
@@ -123,17 +124,16 @@ function rotation(character) {
       character.isRotating = false;
     }
   } else if (character.gravityAcc < 0) {
-    // when the hero is upside down
-    rotate(180);
+    rotate(180); // when the character is upside down
   }
 
   function rotate(degrees) {
     ctx.save();
     let xTranslate = character.x + character.w / 2;
     let yTranslate = character.y + character.h / 2;
-    ctx.translate(xTranslate, yTranslate); // translate to rectangle center
+    ctx.translate(xTranslate, yTranslate);
     ctx.rotate((Math.PI / 180) * degrees);
-    ctx.translate(-Math.abs(xTranslate), -Math.abs(yTranslate));
+    ctx.translate(-xTranslate, -yTranslate);
   }
 }
 
@@ -148,36 +148,82 @@ function gravity(character) {
   } else if (character.gravityAcc > 10) {
     character.gravityAcc = 10;
   }
+
+  // when the character falls down from a platform
+  if (character.gravityAcc === 1.1025 || character.gravityAcc === -1.1025)
+    character.isFlying = true;
 }
 
 function collision(character) {
   let sideCollision = false; // for enemies
 
-  // check if the character is colliding with the floor
-  if (character.y > canvas.height - character.h) {
-    character.y = canvas.height - character.h;
-    character.isFlying = false;
-    character.gravityAcc = 1;
-  }
+  // check if the character is colliding with the right side of a brick
+  level.bricks.forEach(brick => {
+    if (
+      character.y <= brick[1] &&
+      character.y + character.h >= brick[1] + level.brickSize
+    ) {
+      if (character.x < brick[0] + level.brickSize && character.x > brick[0]) {
+        character.x = brick[0] + level.brickSize + 1;
+        sideCollision = true;
+      }
+    }
+  });
 
-  // check if the character is colliding with the ceiling
-  if (character.y < 0) {
-    character.y = 0;
-    character.isFlying = false;
-    character.gravityAcc = -1;
-  }
+  // check if the character is colliding with the left side of a brick
+  level.bricks.forEach(brick => {
+    if (
+      character.y <= brick[1] &&
+      character.y + character.h >= brick[1] + level.brickSize
+    ) {
+      if (
+        character.x + character.w >= brick[0] &&
+        character.x < brick[0] + level.brickSize
+      ) {
+        character.x = brick[0] - character.w - 1;
+        sideCollision = true;
+      }
+    }
+  });
 
-  // check if the character is colliding with the left side
-  if (character.x < 0) {
-    character.x = 0;
-    sideCollision = true;
-  }
+  // check if the character is colliding with the top of a brick
+  level.bricks.forEach(brick => {
+    if (
+      (character.x + 15 >= brick[0] &&
+        character.x + 15 <= brick[0] + level.brickSize) ||
+      (character.x + character.w - 15 >= brick[0] &&
+        character.x + character.w - 15 <= brick[0] + level.brickSize)
+    ) {
+      if (
+        character.y + character.h > brick[1] &&
+        character.y + character.h < brick[1] + level.brickSize
+      ) {
+        if (character.gravityAcc > 0) {
+          character.y = brick[1] - character.h;
+          character.isFlying = false;
+          character.gravityAcc = 1;
+        }
+      }
+    }
+  });
 
-  // check if the character is colliding with the right side
-  if (character.x > canvas.width - character.w) {
-    character.x = canvas.width - character.w;
-    sideCollision = true;
-  }
+  // check if the character is colliding with the bottom of a brick
+  level.bricks.forEach(brick => {
+    if (
+      (character.x + 15 >= brick[0] &&
+        character.x + 15 <= brick[0] + level.brickSize) ||
+      (character.x + character.w - 15 >= brick[0] &&
+        character.x + character.w - 15 <= brick[0] + level.brickSize)
+    ) {
+      if (character.y < brick[1] + level.brickSize && character.y > brick[1]) {
+        if (character.gravityAcc < 0) {
+          character.y = brick[1] + level.brickSize;
+          character.isFlying = false;
+          character.gravityAcc = -1;
+        }
+      }
+    }
+  });
 
   return sideCollision;
 }

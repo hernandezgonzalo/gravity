@@ -8,20 +8,20 @@
     <link rel="stylesheet" href="./css/style.css" />
     <style>
       @font-face {
-        font-family: "Halo3";
-        src: url("./fonts/halo3.ttf");
+        font-family: "Halo";
+        src: url("./fonts/halo.ttf");
+      }
+      @font-face {
+        font-family: "Motion Control";
+        src: url("./fonts/motioncontrol.otf");
       }
     </style>
   </head>
   <body>
     <div id="screen">
-      <span style="font-family: 'Halo3';"></span>
-      <canvas
-        id="canvas"
-        width="900"
-        height="600"
-        style="border: 1px solid gray;"
-      ></canvas>
+      <span style="font-family: 'Halo'"></span>
+      <span style="font-family: 'Motion Control'"></span>
+      <canvas id="canvas" width="900" height="600"></canvas>
     </div>
     <script>
       window.onload = function() {
@@ -31,10 +31,14 @@
         let bound = 0.1;
         const MAXSPEED = 1;
         let y = 0;
+        var titleTime = 0;
+        var textOpacity = 0;
+        var textBlink = 0;
 
         setInterval(() => {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           drawTitle();
+          if (titleTime++ > 360) drawText();
         }, 10);
 
         function drawTitle() {
@@ -44,11 +48,40 @@
           if (speed > MAXSPEED) speed = MAXSPEED;
           y += speed;
 
-          ctx.font = "80px Halo3";
+          ctx.globalAlpha = 1;
+          ctx.font = "80px Halo";
           ctx.fillStyle = "#111";
           ctx.textAlign = "center";
           ctx.textBaseline = "bottom";
           ctx.fillText("GRAVITY", canvas.width / 2, y);
+        }
+
+        function drawText() {
+          ctx.globalAlpha = textOpacity < 100 ? ++textOpacity / 100 : 1;
+          ctx.font = "30px Motion Control";
+          ctx.fillStyle = "#333";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "bottom";
+          ctx.fillText(
+            "CONTROLS: ARROWS LEFT AND RIGHT, AND KEY Z",
+            canvas.width / 2,
+            400
+          );
+          if (++textBlink < 50) {
+            ctx.fillText(
+              "PRESS KEY Z TO START THE GAME",
+              canvas.width / 2,
+              450
+            );
+          } else if (textBlink > 100) {
+            textBlink = 0;
+          }
+          ctx.fillStyle = "#999";
+          ctx.fillText(
+            "A PROJECT FOR IRONHACK · GONZALO HERNÁNDEZ · 2019",
+            canvas.width / 2,
+            550
+          );
         }
       };
     </script>
