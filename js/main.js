@@ -207,10 +207,10 @@ function collision(character) {
 
     // check if the enemy is going to fall and avoid it
     if (
-      (character.isLookingLeft &&
+      (character.speed < 0 &&
         character.x + 30 - level.brickSize >= brick[0] &&
         character.x + 30 - level.brickSize <= brick[0] + level.brickSize) ||
-      (!character.isLookingLeft &&
+      (character.speed > 0 &&
         character.x + character.w - 30 + level.brickSize >= brick[0] &&
         character.x + character.w - 30 + level.brickSize <=
           brick[0] + level.brickSize)
@@ -220,7 +220,7 @@ function collision(character) {
           character.y + character.h >= brick[1] &&
           character.y + character.h < brick[1] + level.brickSize) ||
         (character.gravityAcc < 0 &&
-          character.y < brick[1] + level.brickSize &&
+          character.y <= brick[1] + level.brickSize &&
           character.y > brick[1])
       )
         fallDown = false;
