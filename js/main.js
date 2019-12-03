@@ -17,7 +17,6 @@ class Character {
     this.y = y;
     this.w = width;
     this.h = height;
-    this.speed = 2.5; // horizontal speed
     this.gravityAcc = 1; // minimum: 1, maximum: 10
     this.isFlying = true;
     this.isRotating = false;
@@ -32,30 +31,75 @@ class Character {
 class Hero extends Character {
   constructor(x, y, width, height, image, sprites) {
     super(x, y, width, height, image, sprites);
+    this.speed = 2.5; // horizontal speed
   }
 }
 
 class Enemy extends Character {
   constructor(x, y, width, height, image, sprites) {
     super(x, y, width, height, image, sprites);
-    this.walk();
+    this.speed = 1.25; // horizontal speed
+    this.spritePace = 0;
   }
   walk() {
-    setInterval(() => {
-      if (!this.isFlying) {
-        this.x += this.speed;
+    if (!this.isFlying) {
+      this.x += this.speed;
+      if (++this.spritePace === 2) {
         this.activeSprite++;
-        if (this.activeSprite === this.sprites) this.activeSprite = 0;
-        if (collision(this)) this.speed = -this.speed;
-        if (!this.isRotating) {
-          if (this.speed > 0) {
-            this.isLookingLeft = this.gravityAcc > 0 ? 0 : 1;
-          } else {
-            this.isLookingLeft = this.gravityAcc < 0 ? 0 : 1;
-          }
+        this.spritePace = 0;
+      }
+      if (this.activeSprite === this.sprites) this.activeSprite = 0;
+      if (collision(this)) this.speed = -this.speed;
+      if (!this.isRotating) {
+        if (this.speed > 0) {
+          this.isLookingLeft = this.gravityAcc > 0 ? 0 : 1;
+        } else {
+          this.isLookingLeft = this.gravityAcc < 0 ? 0 : 1;
         }
       }
-    }, 20);
+    }
+  }
+}
+
+class Background {
+  constructor(image, width, height) {
+    this.image = new Image();
+    this.image.src = image;
+    this.width = width;
+    this.height = height;
+    this.sx = 0;
+    this.sy = 0;
+  }
+  draw() {
+    this.clacPosition();
+    ctx.drawImage(
+      this.image,
+      this.sx,
+      this.sy,
+      canvas.width,
+      canvas.height,
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+  }
+  clacPosition() {
+    // horizontal parallax effect
+    let calcX =
+      1 - ((hero.x + hero.w / 2) / canvas.width) * (canvas.width - this.width);
+    if (calcX < 0) this.sx = 0;
+    else if (calcX > this.width - canvas.width)
+      this.sx = this.width - canvas.width;
+    else this.sx = calcX;
+    // vertical parallax effect
+    let calcY =
+      1 -
+      ((hero.y + hero.h / 2) / canvas.height) * (canvas.height - this.height);
+    if (calcY < 0) this.sy = 0;
+    else if (calcY > this.height - canvas.height)
+      this.sy = this.height - canvas.height;
+    else this.sy = calcY;
   }
 }
 
@@ -65,18 +109,27 @@ var enemies = [];
 enemies.push(new Enemy(550, 100, 44.5, 60, "./img/enemy-sprites.png", 24));
 enemies.push(new Enemy(150, 100, 44.5, 60, "./img/enemy-sprites.png", 24));
 
+// background creation
+var backgrounds = [];
+backgrounds.push(new Background("./img/sky-layer.png", 950, 633));
+backgrounds.push(new Background("./img/buildings-layer.png", 1000, 672));
+
 // -----------------------
-// DRAWING
+// GAME LOOP
 // -----------------------
 
 function gameLoop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  backgrounds.forEach(bg => {
+    bg.draw();
+  });
   level.drawBricks();
   keyboard(hero);
+  drawCharacter(hero);
   enemies.forEach(enemy => {
+    enemy.walk();
     drawCharacter(enemy);
   });
-  drawCharacter(hero);
 }
 
 function drawCharacter(character) {
