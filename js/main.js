@@ -170,12 +170,12 @@ function update(character, secondsPassed) {
 function rotation(character) {
   // rotate when gravity changes
   if (character.isRotating) {
-    if (character.gravityAcc > -3 && character.gravityAcc < 0) {
-      let degrees = (character.gravityAcc + 1) * 90;
+    if (character.gravityAcc > -5 && character.gravityAcc < 0) {
+      let degrees = (character.gravityAcc + 1) * 45;
       if (character.isLookingLeft) degrees = -degrees;
       rotate(degrees);
-    } else if (character.gravityAcc < 3 && character.gravityAcc > 0) {
-      let degrees = (character.gravityAcc - 1) * 90 - 180;
+    } else if (character.gravityAcc < 5 && character.gravityAcc > 0) {
+      let degrees = (character.gravityAcc - 1) * 45 - 180;
       if (!character.isLookingLeft) degrees = -degrees;
       rotate(degrees);
     } else if (character.gravityAcc < 0) {
@@ -200,19 +200,19 @@ function rotation(character) {
 }
 
 function gravity(character, secondsPassed) {
-  character.y += character.gravityAcc;
+  character.y += character.gravityAcc * secondsPassed;
 
   // acceleration effect when it starts to fly
-  if (character.gravityAcc > -10 && character.gravityAcc < 10) {
-    character.gravityAcc *= 1.05;
-  } else if (character.gravityAcc < -10) {
-    character.gravityAcc = -10;
-  } else if (character.gravityAcc > 10) {
-    character.gravityAcc = 10;
+  if (character.gravityAcc > -15 && character.gravityAcc < 15) {
+    character.gravityAcc += character.gravityAcc * secondsPassed * 10;
+  } else if (character.gravityAcc < -15) {
+    character.gravityAcc = -15;
+  } else if (character.gravityAcc > 15) {
+    character.gravityAcc = 15;
   }
 
   // when the character falls down from a platform
-  if (character.gravityAcc === 1.1025 || character.gravityAcc === -1.1025)
+  if (character.gravityAcc > 1.1025 || character.gravityAcc < -1.1025)
     character.isFlying = true;
 }
 
