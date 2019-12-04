@@ -26,6 +26,23 @@ class Character {
     this.sprites = sprites;
     this.activeSprite = 0;
   }
+  draw() {
+    if (this.activeSprite === this.sprites) this.activeSprite = 0;
+    let sx = this.w * this.activeSprite;
+    let sy = this.h * this.isLookingLeft;
+    ctx.drawImage(
+      this.image,
+      sx,
+      sy,
+      this.w,
+      this.h,
+      this.x,
+      this.y,
+      this.w,
+      this.h
+    );
+    ctx.restore();
+  }
 }
 
 class Hero extends Character {
@@ -112,7 +129,7 @@ enemies.push(new Enemy(150, 100, 44.5, 60, "./img/enemy-sprites.png", 24));
 // background creation
 var backgrounds = [];
 backgrounds.push(new Background("./img/sky-layer.png", 950, 633));
-backgrounds.push(new Background("./img/buildings-layer.png", 1000, 672));
+backgrounds.push(new Background("./img/buildings-layer.png", 1000, 667));
 
 // -----------------------
 // GAME LOOP
@@ -125,33 +142,18 @@ function gameLoop() {
   });
   level.drawBricks();
   keyboard(hero);
-  drawCharacter(hero);
+  update(hero);
   enemies.forEach(enemy => {
     enemy.walk();
-    drawCharacter(enemy);
+    update(enemy);
   });
 }
 
-function drawCharacter(character) {
+function update(character) {
   rotation(character);
   gravity(character);
   collision(character);
-
-  if (character.activeSprite === character.sprites) character.activeSprite = 0;
-  let sx = character.w * character.activeSprite;
-  let sy = character.h * character.isLookingLeft;
-  ctx.drawImage(
-    character.image,
-    sx,
-    sy,
-    character.w,
-    character.h,
-    character.x,
-    character.y,
-    character.w,
-    character.h
-  );
-  ctx.restore();
+  character.draw();
 }
 
 // -----------------------
