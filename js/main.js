@@ -2,7 +2,7 @@ var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 var rightPressed = false;
 var leftPressed = false;
-const MAXGRAVITY = 10;
+var maxGravity = 10;
 
 // -----------------------
 // CLASSES AND OBJECTS
@@ -202,12 +202,12 @@ function rotation(character) {
 
 function gravity(character, secondsPassed) {
   // acceleration effect when it starts to fly
-  if (character.gravityAcc > -MAXGRAVITY && character.gravityAcc < MAXGRAVITY) {
-    character.gravityAcc += character.gravityAcc * secondsPassed * 10;
-  } else if (character.gravityAcc < -MAXGRAVITY) {
-    character.gravityAcc = -MAXGRAVITY;
-  } else if (character.gravityAcc > MAXGRAVITY) {
-    character.gravityAcc = MAXGRAVITY;
+  if (character.gravityAcc > -maxGravity && character.gravityAcc < maxGravity) {
+    character.gravityAcc += character.gravityAcc * secondsPassed * maxGravity;
+  } else if (character.gravityAcc < -maxGravity) {
+    character.gravityAcc = -maxGravity;
+  } else if (character.gravityAcc > maxGravity) {
+    character.gravityAcc = maxGravity;
   }
 
   character.y += character.gravityAcc * secondsPassed * 100;
