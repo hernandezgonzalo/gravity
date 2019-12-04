@@ -2,6 +2,7 @@ var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 var rightPressed = false;
 var leftPressed = false;
+const MAXGRAVITY = 20;
 
 // -----------------------
 // CLASSES AND OBJECTS
@@ -13,7 +14,7 @@ class Character {
     this.y = y;
     this.w = width;
     this.h = height;
-    this.gravityAcc = 1; // minimum: 1, maximum: 10
+    this.gravityAcc = 1;
     this.isFlying = true;
     this.isRotating = false;
     this.isLookingLeft = 0; // defines the row of the sprite sheet
@@ -200,19 +201,19 @@ function rotation(character) {
 }
 
 function gravity(character, secondsPassed) {
-  character.y += character.gravityAcc * secondsPassed;
-
   // acceleration effect when it starts to fly
-  if (character.gravityAcc > -15 && character.gravityAcc < 15) {
+  if (character.gravityAcc > -MAXGRAVITY && character.gravityAcc < MAXGRAVITY) {
     character.gravityAcc += character.gravityAcc * secondsPassed * 10;
-  } else if (character.gravityAcc < -15) {
-    character.gravityAcc = -15;
-  } else if (character.gravityAcc > 15) {
-    character.gravityAcc = 15;
+  } else if (character.gravityAcc < -MAXGRAVITY) {
+    character.gravityAcc = -MAXGRAVITY;
+  } else if (character.gravityAcc > MAXGRAVITY) {
+    character.gravityAcc = MAXGRAVITY;
   }
 
+  character.y += character.gravityAcc;
+
   // when the character falls down from a platform
-  if (character.gravityAcc > 1.1025 || character.gravityAcc < -1.1025)
+  if (character.gravityAcc > 1 || character.gravityAcc < -1)
     character.isFlying = true;
 }
 
