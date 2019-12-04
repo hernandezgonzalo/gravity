@@ -202,12 +202,12 @@ function rotation(character) {
 
 function gravity(character, secondsPassed) {
   // acceleration effect when it starts to fly
-  if (character.gravityAcc > -maxGravity && character.gravityAcc < maxGravity) {
-    character.gravityAcc += character.gravityAcc * secondsPassed * maxGravity;
-  } else if (character.gravityAcc < -maxGravity) {
-    character.gravityAcc = -maxGravity;
-  } else if (character.gravityAcc > maxGravity) {
-    character.gravityAcc = maxGravity;
+  if (character.gravityAcc > -13 && character.gravityAcc < 13) {
+    character.gravityAcc *= 1.25;
+  } else if (character.gravityAcc < -13) {
+    character.gravityAcc = -13;
+  } else if (character.gravityAcc > 13) {
+    character.gravityAcc = 13;
   }
 
   character.y += character.gravityAcc * secondsPassed * 100;
