@@ -204,7 +204,7 @@ function gravity(character, secondsPassed) {
 
   // acceleration effect when it starts to fly
   if (character.gravityAcc > -10 && character.gravityAcc < 10) {
-    character.gravityAcc *= 1.05;
+    character.gravityAcc *= 1.1;
   } else if (character.gravityAcc < -10) {
     character.gravityAcc = -10;
   } else if (character.gravityAcc > 10) {
