@@ -1,7 +1,3 @@
-window.onload = setInterval(() => {
-  gameLoop();
-}, 10);
-
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 var rightPressed = false;
@@ -48,19 +44,19 @@ class Character {
 class Hero extends Character {
   constructor(x, y, width, height, image, sprites) {
     super(x, y, width, height, image, sprites);
-    this.speed = 2.5; // horizontal speed
+    this.speed = 200; // horizontal speed
   }
 }
 
 class Enemy extends Character {
   constructor(x, y, width, height, image, sprites) {
     super(x, y, width, height, image, sprites);
-    this.speed = 1.25; // horizontal speed
+    this.speed = 100; // horizontal speed
     this.spritePace = 0;
   }
-  walk() {
+  walk(secondsPassed) {
     if (!this.isFlying) {
-      this.x += this.speed;
+      this.x += this.speed * secondsPassed;
       if (++this.spritePace === 2) {
         this.activeSprite++;
         this.spritePace = 0;
@@ -135,23 +131,34 @@ backgrounds.push(new Background("./img/buildings-layer.png", 1000, 667));
 // GAME LOOP
 // -----------------------
 
-function gameLoop() {
+window.onload = function() {
+  window.requestAnimationFrame(gameLoop);
+};
+
+var oldTimeStamp = 0;
+
+function gameLoop(timeStamp) {
+  let secondsPassed = (timeStamp - oldTimeStamp) / 1000;
+  oldTimeStamp = timeStamp;
+
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   backgrounds.forEach(bg => {
     bg.draw();
   });
   level.drawBricks();
-  keyboard(hero);
-  update(hero);
+  keyboard(hero, secondsPassed);
+  update(hero, secondsPassed);
   enemies.forEach(enemy => {
-    enemy.walk();
-    update(enemy);
+    enemy.walk(secondsPassed);
+    update(enemy, secondsPassed);
   });
+
+  window.requestAnimationFrame(gameLoop);
 }
 
-function update(character) {
+function update(character, secondsPassed) {
   rotation(character);
-  gravity(character);
+  gravity(character, secondsPassed);
   collision(character);
   character.draw();
 }
@@ -192,7 +199,7 @@ function rotation(character) {
   }
 }
 
-function gravity(character) {
+function gravity(character, secondsPassed) {
   character.y += character.gravityAcc;
 
   // acceleration effect when it starts to fly
@@ -318,14 +325,14 @@ function keyUpHandler(e) {
   }
 }
 
-function keyboard(character) {
+function keyboard(character, secondsPassed) {
   if (rightPressed) {
-    character.x += character.speed;
+    character.x += character.speed * secondsPassed;
     if (!character.isRotating)
       character.isLookingLeft = character.gravityAcc > 0 ? 0 : 1;
     character.activeSprite++;
   } else if (leftPressed) {
-    character.x -= character.speed;
+    character.x -= character.speed * secondsPassed;
     if (!character.isRotating)
       character.isLookingLeft = character.gravityAcc < 0 ? 0 : 1;
     character.activeSprite++;
