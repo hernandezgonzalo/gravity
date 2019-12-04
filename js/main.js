@@ -2,7 +2,7 @@ var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 var rightPressed = false;
 var leftPressed = false;
-const MAXGRAVITY = 20;
+const MAXGRAVITY = 10;
 
 // -----------------------
 // CLASSES AND OBJECTS
@@ -210,7 +210,7 @@ function gravity(character, secondsPassed) {
     character.gravityAcc = MAXGRAVITY;
   }
 
-  character.y += character.gravityAcc;
+  character.y += character.gravityAcc * secondsPassed * 100;
 
   // when the character falls down from a platform
   if (character.gravityAcc > 1 || character.gravityAcc < -1)
