@@ -202,14 +202,14 @@ function rotation(character) {
 function gravity(character, secondsPassed) {
   // acceleration effect when it starts to fly
   if (character.gravityAcc > -10 && character.gravityAcc < 10) {
-    character.gravityAcc *= 1.15;
+    character.gravityAcc *= 1.115;
   } else if (character.gravityAcc < -10) {
     character.gravityAcc = -10;
   } else if (character.gravityAcc > 10) {
     character.gravityAcc = 10;
   }
 
-  character.y += character.gravityAcc * secondsPassed * 100;
+  character.y += character.gravityAcc * secondsPassed * 80;
 
   // when the character falls down from a platform
   if (character.gravityAcc > 1 || character.gravityAcc < -1)
