@@ -23,7 +23,7 @@ class Character {
     this.activeSprite = 0;
   }
   draw() {
-    if (this.activeSprite === this.sprites) this.activeSprite = 0;
+    if (this.activeSprite === this.sprites) this.activeSprite = 1;
     let sx = this.w * this.activeSprite;
     let sy = this.h * this.isLookingLeft;
     ctx.drawImage(
@@ -61,7 +61,7 @@ class Enemy extends Character {
         this.activeSprite++;
         this.spritePace = 0;
       }
-      if (this.activeSprite === this.sprites) this.activeSprite = 0;
+      if (this.activeSprite === this.sprites) this.activeSprite = 1;
       if (collision(this)) this.speed = -this.speed;
       if (!this.isRotating) {
         if (this.speed > 0) {
@@ -117,15 +117,16 @@ class Background {
 }
 
 // characters creation
-var hero = new Hero(300, 100, 46, 60, "./img/hero-sprites.png", 24);
+var hero = new Hero(300, 100, 65, 51, "./img/hero-sprites.png", 19);
 var enemies = [];
-enemies.push(new Enemy(550, 100, 44.5, 60, "./img/enemy-sprites.png", 24));
-enemies.push(new Enemy(150, 100, 44.5, 60, "./img/enemy-sprites.png", 24));
+enemies.push(new Enemy(550, 100, 65, 51, "./img/enemy-sprites.png", 19));
+enemies.push(new Enemy(150, 100, 65, 51, "./img/enemy-sprites.png", 19));
 
 // background creation
 var backgrounds = [];
-backgrounds.push(new Background("./img/sky-layer.png", 950, 633));
-backgrounds.push(new Background("./img/buildings-layer.png", 1000, 667));
+backgrounds.push(new Background("./img/bg-back.png", 950, 633));
+backgrounds.push(new Background("./img/bg-mid.png", 1000, 667));
+backgrounds.push(new Background("./img/bg-front.png", 1050, 700));
 
 // -----------------------
 // GAME LOOP
@@ -139,9 +140,10 @@ var oldTimeStamp = 0;
 
 function gameLoop(timeStamp) {
   let secondsPassed = (timeStamp - oldTimeStamp) / 1000;
+  if (secondsPassed > 0.2) secondsPassed = 0.2;
   oldTimeStamp = timeStamp;
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  clearScreen();
   backgrounds.forEach(bg => {
     bg.draw();
   });
@@ -154,6 +156,15 @@ function gameLoop(timeStamp) {
   });
 
   window.requestAnimationFrame(gameLoop);
+}
+
+function clearScreen() {
+  //ctx.clearRect(0, 0, canvas.width, canvas.height);
+  let grd = ctx.createLinearGradient(0, 0, 0, canvas.height);
+  grd.addColorStop(0, "#4FC3F7");
+  grd.addColorStop(1, "#84F4F4");
+  ctx.fillStyle = grd;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
 function update(character, secondsPassed) {
@@ -241,10 +252,10 @@ function collision(character) {
     }
 
     if (
-      (character.x + 15 >= brick[0] &&
-        character.x + 15 <= brick[0] + level.brickSize) ||
-      (character.x + character.w - 15 >= brick[0] &&
-        character.x + character.w - 15 <= brick[0] + level.brickSize)
+      (character.x + 25 >= brick[0] &&
+        character.x + 25 <= brick[0] + level.brickSize) ||
+      (character.x + character.w - 25 >= brick[0] &&
+        character.x + character.w - 25 <= brick[0] + level.brickSize)
     ) {
       // check if the character is colliding with the top of a brick
       if (
