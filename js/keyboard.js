@@ -1,3 +1,6 @@
+var rightPressed = false;
+var leftPressed = false;
+
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 
