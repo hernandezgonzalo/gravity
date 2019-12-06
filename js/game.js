@@ -7,73 +7,6 @@ var leftPressed = false;
 // CLASSES AND OBJECTS
 // -----------------------
 
-class Character {
-  constructor(x, y, width, height, image, sprites) {
-    this.x = x;
-    this.y = y;
-    this.w = width;
-    this.h = height;
-    this.gravityAcc = 1;
-    this.isFlying = true;
-    this.isRotating = false;
-    this.isLookingLeft = 0; // defines the row of the sprite sheet
-    this.image = new Image();
-    this.image.src = image;
-    this.sprites = sprites;
-    this.activeSprite = 0;
-  }
-  draw() {
-    if (this.activeSprite === this.sprites) this.activeSprite = 1;
-    let sx = this.w * this.activeSprite;
-    let sy = this.h * this.isLookingLeft;
-    ctx.drawImage(
-      this.image,
-      sx,
-      sy,
-      this.w,
-      this.h,
-      this.x,
-      this.y,
-      this.w,
-      this.h
-    );
-    ctx.restore();
-  }
-}
-
-class Hero extends Character {
-  constructor(x, y, width, height, image, sprites) {
-    super(x, y, width, height, image, sprites);
-    this.speed = 200; // horizontal speed
-  }
-}
-
-class Enemy extends Character {
-  constructor(x, y, width, height, image, sprites) {
-    super(x, y, width, height, image, sprites);
-    this.speed = 100; // horizontal speed
-    this.spritePace = 0;
-  }
-  walk(secondsPassed) {
-    if (!this.isFlying) {
-      this.x += this.speed * secondsPassed;
-      if (++this.spritePace === 2) {
-        this.activeSprite++;
-        this.spritePace = 0;
-      }
-      if (this.activeSprite === this.sprites) this.activeSprite = 1;
-      if (collision(this)) this.speed = -this.speed;
-      if (!this.isRotating) {
-        if (this.speed > 0) {
-          this.isLookingLeft = this.gravityAcc > 0 ? 0 : 1;
-        } else {
-          this.isLookingLeft = this.gravityAcc < 0 ? 0 : 1;
-        }
-      }
-    }
-  }
-}
-
 class Background {
   constructor(image, width, height) {
     this.image = new Image();
@@ -84,7 +17,7 @@ class Background {
     this.sy = 0;
   }
   draw() {
-    this.clacPosition();
+    this.calcPosition();
     ctx.drawImage(
       this.image,
       this.sx,
@@ -97,22 +30,20 @@ class Background {
       canvas.height
     );
   }
-  clacPosition() {
+  calcPosition() {
     // horizontal parallax effect
-    let calcX =
+    this.sx =
       1 - ((hero.x + hero.w / 2) / canvas.width) * (canvas.width - this.width);
-    if (calcX < 0) this.sx = 0;
-    else if (calcX > this.width - canvas.width)
+    if (this.sx < 0) this.sx = 0;
+    else if (this.sx > this.width - canvas.width)
       this.sx = this.width - canvas.width;
-    else this.sx = calcX;
     // vertical parallax effect
-    let calcY =
+    this.sy =
       1 -
       ((hero.y + hero.h / 2) / canvas.height) * (canvas.height - this.height);
-    if (calcY < 0) this.sy = 0;
-    else if (calcY > this.height - canvas.height)
+    if (this.sy < 0) this.sy = 0;
+    else if (this.sy > this.height - canvas.height)
       this.sy = this.height - canvas.height;
-    else this.sy = calcY;
   }
 }
 
@@ -301,54 +232,4 @@ function collision(character) {
   });
 
   if (character instanceof Enemy) return sideCollision || fallDown;
-}
-
-// -----------------------
-// KEYBOARD CONTROL
-// -----------------------
-
-document.addEventListener("keydown", keyDownHandler, false);
-document.addEventListener("keyup", keyUpHandler, false);
-
-function keyDownHandler(e) {
-  if (e.key == "Right" || e.key == "ArrowRight") {
-    rightPressed = true;
-  } else if (e.key == "Left" || e.key == "ArrowLeft") {
-    leftPressed = true;
-  } else if ((e.key == "z" || e.key == "Z") && !hero.isFlying) {
-    hero.gravityAcc = -hero.gravityAcc;
-    hero.isFlying = true;
-    hero.isRotating = true;
-    enemies.forEach(enemy => {
-      enemy.gravityAcc = -Math.sign(enemy.gravityAcc);
-      enemy.isFlying = true;
-      enemy.isRotating = true;
-      enemy.speed = -enemy.speed;
-    });
-  }
-}
-
-function keyUpHandler(e) {
-  if (e.key == "Right" || e.key == "ArrowRight") {
-    rightPressed = false;
-  } else if (e.key == "Left" || e.key == "ArrowLeft") {
-    leftPressed = false;
-  }
-}
-
-function keyboard(character, secondsPassed) {
-  if (rightPressed) {
-    character.x += character.speed * secondsPassed;
-    if (!character.isRotating)
-      character.isLookingLeft = character.gravityAcc > 0 ? 0 : 1;
-    character.activeSprite++;
-  } else if (leftPressed) {
-    character.x -= character.speed * secondsPassed;
-    if (!character.isRotating)
-      character.isLookingLeft = character.gravityAcc < 0 ? 0 : 1;
-    character.activeSprite++;
-  } else {
-    character.activeSprite = 0;
-  }
-  collision(character);
 }
