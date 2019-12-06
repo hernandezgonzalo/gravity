@@ -2,6 +2,8 @@ var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 var gravityForce = 80;
 
+var keyboard = new Keyboard();
+
 // characters creation
 var hero = new Hero(300, 100, 65, 51, "./img/hero-sprites.png", 19);
 var enemies = [];
@@ -34,7 +36,7 @@ function gameLoop(timeStamp) {
     bg.draw();
   });
   level.drawBricks();
-  keyboard(hero, secondsPassed);
+  keyboard.controller(hero, secondsPassed);
   update(hero, secondsPassed);
   enemies.forEach(enemy => {
     enemy.walk(secondsPassed);
