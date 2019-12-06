@@ -9,10 +9,11 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #e5e5e5;
+  background-color: #fff;
+  /*background: url("./../img/canvas-orange.jpg");*/
 }
 
 #canvas {
   background-color: white;
-  border: 1px solid #d5d5d5;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.46);
 }

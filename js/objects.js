@@ -12,6 +12,7 @@ class Character {
     this.image.src = image;
     this.sprites = sprites;
     this.activeSprite = 0;
+    this.margin = 25;
   }
   draw() {
     if (this.activeSprite === this.sprites) this.activeSprite = 1;

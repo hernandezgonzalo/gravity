@@ -1,9 +1,6 @@
-window.onload = function() {
-  console.log("ready");
-};
-
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
+var gravityForce = 80;
 
 // characters creation
 var hero = new Hero(300, 100, 65, 51, "./img/hero-sprites.png", 19);
@@ -109,7 +106,7 @@ function gravity(character, secondsPassed) {
     character.gravityAcc = 10;
   }
 
-  character.y += character.gravityAcc * secondsPassed * 80;
+  character.y += character.gravityAcc * secondsPassed * gravityForce;
 
   // when the character falls down from a platform
   if (character.gravityAcc > 1 || character.gravityAcc < -1)
@@ -141,10 +138,11 @@ function collision(character) {
     }
 
     if (
-      (character.x + 25 >= brick[0] &&
-        character.x + 25 <= brick[0] + level.brickSize) ||
-      (character.x + character.w - 25 >= brick[0] &&
-        character.x + character.w - 25 <= brick[0] + level.brickSize)
+      (character.x + character.margin >= brick[0] &&
+        character.x + character.margin <= brick[0] + level.brickSize) ||
+      (character.x + character.w - character.margin >= brick[0] &&
+        character.x + character.w - character.margin <=
+          brick[0] + level.brickSize)
     ) {
       // check if the character is colliding with the top of a brick
       if (
