@@ -4,21 +4,38 @@ class Level {
     this.brickSize = 20; // size of the bricks in pixeles
     this.brick = new Image();
     this.brick.src = "./img/brick.png";
+    this.explosive = new Image();
+    this.explosive.src = "./img/explosive.png";
   }
   drawBricks() {
     this.bricks.forEach(location => {
-      ctx.drawImage(
-        this.brick,
-        location[0],
-        location[1],
-        this.brickSize,
-        this.brickSize
-      );
+      if (!location[2]) {
+        ctx.drawImage(
+          this.brick,
+          location[0],
+          location[1],
+          this.brickSize,
+          this.brickSize
+        );
+      } else {
+        ctx.drawImage(
+          this.explosive,
+          location[0],
+          location[1],
+          this.brickSize,
+          this.brickSize
+        );
+      }
     });
   }
 }
 
 var level = new Level([
+  [780, 0, true],
+  [780, 20],
+  [780, 40, true],
+  [780, 60],
+
   [60, 0],
   [80, 0],
   [100, 0],

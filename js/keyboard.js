@@ -12,11 +12,11 @@ class Keyboard {
     } else if (e.key == "Left" || e.key == "ArrowLeft") {
       this.leftPressed = true;
     } else if ((e.key == "z" || e.key == "Z") && !hero.isFlying) {
-      hero.gravityAcc = -hero.gravityAcc;
+      hero.gravitySpeed = -hero.gravitySpeed;
       hero.isFlying = true;
       hero.isRotating = true;
       enemies.forEach(enemy => {
-        enemy.gravityAcc = -Math.sign(enemy.gravityAcc);
+        enemy.gravitySpeed = -Math.sign(enemy.gravitySpeed);
         enemy.isFlying = true;
         enemy.isRotating = true;
         enemy.speed = -enemy.speed;
@@ -36,12 +36,12 @@ class Keyboard {
     if (this.rightPressed) {
       character.x += character.speed * secondsPassed;
       if (!character.isRotating)
-        character.isLookingLeft = character.gravityAcc > 0 ? 0 : 1;
+        character.isLookingLeft = character.gravitySpeed > 0 ? 0 : 1;
       character.activeSprite++;
     } else if (this.leftPressed) {
       character.x -= character.speed * secondsPassed;
       if (!character.isRotating)
-        character.isLookingLeft = character.gravityAcc < 0 ? 0 : 1;
+        character.isLookingLeft = character.gravitySpeed < 0 ? 0 : 1;
       character.activeSprite++;
     } else {
       character.activeSprite = 0;

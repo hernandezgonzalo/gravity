@@ -4,7 +4,7 @@ class Character {
     this.y = y;
     this.w = width;
     this.h = height;
-    this.gravityAcc = 1;
+    this.gravitySpeed = 1; // the highest is 10
     this.isFlying = true;
     this.isRotating = false;
     this.isLookingLeft = 0; // defines the row of the sprite sheet
@@ -57,9 +57,9 @@ class Enemy extends Character {
       if (collision(this)) this.speed = -this.speed;
       if (!this.isRotating) {
         if (this.speed > 0) {
-          this.isLookingLeft = this.gravityAcc > 0 ? 0 : 1;
+          this.isLookingLeft = this.gravitySpeed > 0 ? 0 : 1;
         } else {
-          this.isLookingLeft = this.gravityAcc < 0 ? 0 : 1;
+          this.isLookingLeft = this.gravitySpeed < 0 ? 0 : 1;
         }
       }
     }
