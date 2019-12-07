@@ -7,7 +7,7 @@ class Level {
     this.explosive = new Image();
     this.explosive.src = "./img/explosive.png";
   }
-  drawBricks() {
+  drawBricks(ctx) {
     this.bricks.forEach(location => {
       if (!location[2]) {
         ctx.drawImage(
@@ -31,16 +31,11 @@ class Level {
 }
 
 var level = new Level([
-  [780, 0, true],
-  [780, 20],
-  [780, 40, true],
-  [780, 60],
-
   [60, 0],
   [80, 0],
   [100, 0],
   [120, 0],
-  [140, 0],
+  [140, 0, true],
   [160, 0],
   [180, 0],
   [200, 0],
@@ -55,9 +50,9 @@ var level = new Level([
   [380, 0],
   [400, 0],
   [420, 0],
-  [440, 0],
-  [460, 0],
-  [480, 0],
+  [440, 0, true],
+  [460, 0, true],
+  [480, 0, true],
   [500, 0],
 
   [200, 440],
@@ -70,7 +65,7 @@ var level = new Level([
   [200, 480],
   [200, 500],
   [200, 520],
-  [200, 540],
+  [200, 540, true],
   [200, 560],
 
   [80, 580],
@@ -85,7 +80,7 @@ var level = new Level([
   [260, 580],
   [280, 580],
   [300, 580],
-  [320, 580],
+  [320, 580, true],
   [340, 580],
   [360, 580],
 

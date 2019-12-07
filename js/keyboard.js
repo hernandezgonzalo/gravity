@@ -1,5 +1,10 @@
 class Keyboard {
   constructor() {
+    this.playerKeys = {
+      left: 37,
+      right: 39,
+      action: 90
+    };
     this.rightPressed = false;
     this.leftPressed = false;
     document.addEventListener("keydown", this.keyDownHandler.bind(this), false);
@@ -7,15 +12,15 @@ class Keyboard {
   }
 
   keyDownHandler(e) {
-    if (e.key == "Right" || e.key == "ArrowRight") {
-      this.rightPressed = true;
-    } else if (e.key == "Left" || e.key == "ArrowLeft") {
+    if (e.keyCode === this.playerKeys.left) {
       this.leftPressed = true;
-    } else if ((e.key == "z" || e.key == "Z") && !hero.isFlying) {
-      hero.gravitySpeed = -hero.gravitySpeed;
-      hero.isFlying = true;
-      hero.isRotating = true;
-      enemies.forEach(enemy => {
+    } else if (e.keyCode === this.playerKeys.right) {
+      this.rightPressed = true;
+    } else if (e.keyCode === this.playerKeys.action && !game.hero.isFlying) {
+      game.hero.gravitySpeed = -game.hero.gravitySpeed;
+      game.hero.isFlying = true;
+      game.hero.isRotating = true;
+      game.enemies.forEach(enemy => {
         enemy.gravitySpeed = -Math.sign(enemy.gravitySpeed);
         enemy.isFlying = true;
         enemy.isRotating = true;
@@ -25,9 +30,9 @@ class Keyboard {
   }
 
   keyUpHandler(e) {
-    if (e.key == "Right" || e.key == "ArrowRight") {
+    if (e.keyCode === this.playerKeys.right) {
       this.rightPressed = false;
-    } else if (e.key == "Left" || e.key == "ArrowLeft") {
+    } else if (e.keyCode === this.playerKeys.left) {
       this.leftPressed = false;
     }
   }
@@ -46,6 +51,6 @@ class Keyboard {
     } else {
       character.activeSprite = 0;
     }
-    collision(character);
+    game.collision(character);
   }
 }

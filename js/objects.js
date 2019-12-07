@@ -14,7 +14,7 @@ class Character {
     this.activeSprite = 0;
     this.margin = 25;
   }
-  draw() {
+  draw(ctx) {
     if (this.activeSprite === this.sprites) this.activeSprite = 1;
     let sx = this.w * this.activeSprite;
     let sy = this.h * this.isLookingLeft;
@@ -34,15 +34,15 @@ class Character {
 }
 
 class Hero extends Character {
-  constructor(x, y, width, height, image, sprites) {
-    super(x, y, width, height, image, sprites);
+  constructor(x, y, width, height, sprites) {
+    super(x, y, width, height, "./img/hero-sprites.png", sprites);
     this.speed = 200; // horizontal speed
   }
 }
 
 class Enemy extends Character {
-  constructor(x, y, width, height, image, sprites) {
-    super(x, y, width, height, image, sprites);
+  constructor(x, y, width, height, sprites) {
+    super(x, y, width, height, "./img/enemy-sprites.png", sprites);
     this.speed = 100; // horizontal speed
     this.spritePace = 0;
   }
@@ -54,7 +54,7 @@ class Enemy extends Character {
         this.spritePace = 0;
       }
       if (this.activeSprite === this.sprites) this.activeSprite = 1;
-      if (collision(this)) this.speed = -this.speed;
+      if (game.collision(this)) this.speed = -this.speed;
       if (!this.isRotating) {
         if (this.speed > 0) {
           this.isLookingLeft = this.gravitySpeed > 0 ? 0 : 1;
@@ -75,8 +75,8 @@ class Background {
     this.sx = 0;
     this.sy = 0;
   }
-  draw() {
-    this.calcPosition();
+  draw(ctx, canvas, hero) {
+    this.calcPosition(canvas, hero);
     ctx.drawImage(
       this.image,
       this.sx,
@@ -89,7 +89,7 @@ class Background {
       canvas.height
     );
   }
-  calcPosition() {
+  calcPosition(canvas, hero) {
     // horizontal parallax effect
     this.sx =
       1 - ((hero.x + hero.w / 2) / canvas.width) * (canvas.width - this.width);
