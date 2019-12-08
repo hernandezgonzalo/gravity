@@ -105,3 +105,14 @@ class Background {
       this.sy = this.height - canvas.height;
   }
 }
+
+class Sky {
+  constructor() {}
+  draw(ctx, canvas) {
+    var grd = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    grd.addColorStop(0, "#4FC3F7");
+    grd.addColorStop(1, "#84F4F4");
+    ctx.fillStyle = grd;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+}

@@ -20,18 +20,18 @@ const game = {
       oldTimeStamp = timeStamp;
 
       // game loop
-      this.clearScreen();
+      this.sky.draw(this.ctx, this.canvas);
       this.backgrounds.forEach(bg => {
         bg.draw(this.ctx, this.canvas, this.hero);
       });
       level.drawBricks(this.ctx);
-      this.keyboard.controller(this.hero, secondsPassed, this);
+      this.keyboard.controller(this.hero, secondsPassed);
       this.update(this.hero, secondsPassed);
       this.enemies.forEach(enemy => {
         enemy.walk(secondsPassed);
         this.update(enemy, secondsPassed);
       });
-      if (this.enemyCollision()) alert("oh");
+      this.enemyCollision(); // TO DO
 
       window.requestAnimationFrame(gameLoop);
     };
@@ -39,6 +39,8 @@ const game = {
   },
 
   reset() {
+    this.sky = new Sky();
+
     // characters creation
     this.hero = new Hero(300, 100, 65, 51, 19);
     this.enemies = [];
@@ -50,15 +52,6 @@ const game = {
     this.backgrounds.push(new Background("./img/bg-back.png", 950, 633));
     this.backgrounds.push(new Background("./img/bg-mid.png", 1000, 667));
     this.backgrounds.push(new Background("./img/bg-front.png", 1050, 700));
-  },
-
-  clearScreen() {
-    //ctx.clearRect(0, 0, canvas.width, canvas.height);
-    this.grd = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
-    this.grd.addColorStop(0, "#4FC3F7");
-    this.grd.addColorStop(1, "#84F4F4");
-    this.ctx.fillStyle = this.grd;
-    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
   },
 
   update(character, secondsPassed) {
