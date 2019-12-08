@@ -24,14 +24,17 @@ const game = {
       this.backgrounds.forEach(bg => {
         bg.draw(this.ctx, this.canvas, this.hero);
       });
-      level.drawBricks(this.ctx);
+      this.level.drawBricks(this.ctx);
       this.keyboard.controller(this.hero, secondsPassed);
       this.update(this.hero, secondsPassed);
       this.enemies.forEach(enemy => {
-        enemy.walk(secondsPassed);
-        this.update(enemy, secondsPassed);
+        if (enemy.alive) {
+          enemy.walk(secondsPassed);
+          this.update(enemy, secondsPassed);
+        }
       });
-      this.enemyCollision(); // TO DO
+      this.enemyCollision();
+      if (!this.hero.alive) this.reset();
 
       window.requestAnimationFrame(gameLoop);
     };
@@ -41,11 +44,16 @@ const game = {
   reset() {
     this.sky = new Sky();
 
+    //level creation
+    this.level = new Level(level[0]);
+
     // characters creation
-    this.hero = new Hero(300, 100, 65, 51, 19);
+    this.hero = Object.assign(new Hero(), this.level.hero);
+    this.hero.alive = true;
     this.enemies = [];
-    this.enemies.push(new Enemy(550, 100, 65, 51, 19));
-    this.enemies.push(new Enemy(150, 100, 65, 51, 19));
+    this.level.enemies.forEach(enemy => {
+      this.enemies.push(Object.assign(new Enemy(), enemy));
+    });
 
     // background creation
     this.backgrounds = [];
@@ -115,60 +123,60 @@ const game = {
     let fallDown = true; // for enemies
     let explosiveBrick = false; // for hero
 
-    level.bricks.forEach(brick => {
+    this.level.bricks.forEach(brick => {
       if (
         character.y <= brick[1] &&
-        character.y + character.h >= brick[1] + level.brickSize
+        character.y + character.h >= brick[1] + this.level.brickSize
       ) {
         // check if the character is colliding with the right side of a brick
         if (
-          character.x < brick[0] + level.brickSize &&
+          character.x < brick[0] + this.level.brickSize &&
           character.x > brick[0]
         ) {
-          character.x = brick[0] + level.brickSize + 1;
+          character.x = brick[0] + this.level.brickSize + 1;
           sideCollision = true;
-          if (character instanceof Hero && brick[2]) explosiveBrick = true;
+          if (brick[2]) explosiveBrick = true;
         }
         // check if the character is colliding with the left side of a brick
         if (
           character.x + character.w >= brick[0] &&
-          character.x < brick[0] + level.brickSize
+          character.x < brick[0] + this.level.brickSize
         ) {
           character.x = brick[0] - character.w - 1;
           sideCollision = true;
-          if (character instanceof Hero && brick[2]) explosiveBrick = true;
+          if (brick[2]) explosiveBrick = true;
         }
       }
 
       if (
         (character.x + character.margin >= brick[0] &&
-          character.x + character.margin <= brick[0] + level.brickSize) ||
+          character.x + character.margin <= brick[0] + this.level.brickSize) ||
         (character.x + character.w - character.margin >= brick[0] &&
           character.x + character.w - character.margin <=
-            brick[0] + level.brickSize)
+            brick[0] + this.level.brickSize)
       ) {
         // check if the character is colliding with the top of a brick
         if (
           character.y + character.h >= brick[1] &&
-          character.y + character.h < brick[1] + level.brickSize
+          character.y + character.h < brick[1] + this.level.brickSize
         ) {
           if (character.gravitySpeed > 0) {
             character.y = brick[1] - character.h;
             character.isFlying = false;
             character.gravitySpeed = 1;
-            if (character instanceof Hero && brick[2]) explosiveBrick = true;
+            if (brick[2]) explosiveBrick = true;
           }
         }
         // check if the character is colliding with the bottom of a brick
         if (
-          character.y <= brick[1] + level.brickSize &&
+          character.y <= brick[1] + this.level.brickSize &&
           character.y > brick[1]
         ) {
           if (character.gravitySpeed < 0) {
-            character.y = brick[1] + level.brickSize;
+            character.y = brick[1] + this.level.brickSize;
             character.isFlying = false;
             character.gravitySpeed = -1;
-            if (character instanceof Hero && brick[2]) explosiveBrick = true;
+            if (brick[2]) explosiveBrick = true;
           }
         }
       }
@@ -176,38 +184,44 @@ const game = {
       // check if the enemy is going to fall and avoid it
       if (
         (character.speed < 0 &&
-          character.x + character.margin - level.brickSize >= brick[0] &&
-          character.x + character.margin - level.brickSize <=
-            brick[0] + level.brickSize) ||
+          character.x + character.margin - this.level.brickSize >= brick[0] &&
+          character.x + character.margin - this.level.brickSize <=
+            brick[0] + this.level.brickSize) ||
         (character.speed > 0 &&
-          character.x + character.w - character.margin + level.brickSize >=
+          character.x + character.w - character.margin + this.level.brickSize >=
             brick[0] &&
-          character.x + character.w - character.margin + level.brickSize <=
-            brick[0] + level.brickSize)
+          character.x + character.w - character.margin + this.level.brickSize <=
+            brick[0] + this.level.brickSize)
       ) {
         if (
           (character.gravitySpeed > 0 &&
             character.y + character.h >= brick[1] &&
-            character.y + character.h < brick[1] + level.brickSize) ||
+            character.y + character.h < brick[1] + this.level.brickSize) ||
           (character.gravitySpeed < 0 &&
-            character.y <= brick[1] + level.brickSize &&
+            character.y <= brick[1] + this.level.brickSize &&
             character.y > brick[1])
         )
           fallDown = false;
       }
     });
 
+    if (character.y + character.h < 0 || character.y > this.canvas.height)
+      character.alive = false;
+    if (character instanceof Hero && explosiveBrick) character.alive = false;
     if (character instanceof Enemy) return sideCollision || fallDown;
   },
 
   enemyCollision() {
-    let margin = this.hero.margin / 2;
-    return this.enemies.some(
-      enemy =>
-        this.hero.x + this.hero.w - margin > enemy.x + margin &&
-        enemy.x + enemy.w - margin > this.hero.x + margin &&
-        this.hero.y + this.hero.h - margin > enemy.y + margin &&
-        enemy.y + enemy.h - margin * 2 > this.hero.y + margin * 2
-    );
+    let m = this.hero.margin / 2; //character collision margin
+    if (
+      this.enemies.some(
+        enemy =>
+          this.hero.x + this.hero.w - m > enemy.x + m &&
+          enemy.x + enemy.w - m > this.hero.x + m &&
+          this.hero.y + this.hero.h - m > enemy.y + m &&
+          enemy.y + enemy.h - m * 2 > this.hero.y + m * 2
+      )
+    )
+      this.hero.alive = false;
   }
 };
