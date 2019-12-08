@@ -11,6 +11,7 @@ const game = {
 
   start() {
     this.keyboard = new Keyboard();
+    this.levelN = 0;
     this.reset();
 
     let oldTimeStamp = 0;
@@ -25,6 +26,7 @@ const game = {
         bg.draw(this.ctx, this.canvas, this.hero);
       });
       this.level.drawBricks(this.ctx);
+      this.level.drawTarget(this.ctx);
       this.keyboard.controller(this.hero, secondsPassed);
       this.update(this.hero, secondsPassed);
       this.enemies.forEach(enemy => {
@@ -35,6 +37,10 @@ const game = {
       });
       this.enemyCollision();
       if (!this.hero.alive) this.reset();
+      if (this.targetCompleted()) {
+        this.levelN++;
+        this.reset();
+      }
 
       window.requestAnimationFrame(gameLoop);
     };
@@ -45,7 +51,8 @@ const game = {
     this.sky = new Sky();
 
     //level creation
-    this.level = new Level(level[0]);
+    if (levels[this.levelN] === undefined) this.levelN = 0;
+    this.level = new Level(levels[this.levelN]);
 
     // characters creation
     this.hero = Object.assign(new Hero(), this.level.hero);
@@ -223,5 +230,15 @@ const game = {
       )
     )
       this.hero.alive = false;
+  },
+
+  targetCompleted() {
+    let m = this.hero.margin / 2;
+    return (
+      this.hero.x + this.hero.w - m > this.level.targetPos[0] &&
+      this.level.targetPos[0] + this.level.targetSize > this.hero.x + m &&
+      this.hero.y + this.hero.h - m > this.level.targetPos[1] &&
+      this.level.targetPos[1] + this.level.targetSize > this.hero.y + m * 2
+    );
   }
 };

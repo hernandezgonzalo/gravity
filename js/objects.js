@@ -1,23 +1,23 @@
 class Character {
-  constructor(x, y, width, height, image, sprites) {
+  constructor(x, y) {
     this.x = x;
     this.y = y;
-    this.w = width;
-    this.h = height;
+    this.w = 65;
+    this.h = 51;
     this.gravitySpeed = 1; // the highest is 10
     this.isFlying = true;
     this.isRotating = false;
     this.isLookingLeft = 0; // defines the row of the sprite sheet
     this.image = new Image();
-    this.image.src = image;
-    this.sprites = sprites;
+    this.sprites = 19;
     this.activeSprite = 0;
     this.margin = 25;
     this.alive = true;
   }
+
   draw(ctx) {
     if (this.activeSprite === this.sprites) this.activeSprite = 1;
-    let sx = this.w * this.activeSprite;
+    let sx = this.w * Math.floor(this.activeSprite);
     let sy = this.h * this.isLookingLeft;
     ctx.drawImage(
       this.image,
@@ -35,25 +35,24 @@ class Character {
 }
 
 class Hero extends Character {
-  constructor(x, y, width, height, sprites) {
-    super(x, y, width, height, "./img/hero-sprites.png", sprites);
+  constructor(x, y) {
+    super(x, y);
+    this.image.src = "./img/hero-sprites.png";
     this.speed = 200; // horizontal speed
   }
 }
 
 class Enemy extends Character {
-  constructor(x, y, width, height, sprites) {
-    super(x, y, width, height, "./img/enemy-sprites.png", sprites);
+  constructor(x, y) {
+    super(x, y);
+    this.image.src = "./img/enemy-sprites.png";
     this.speed = 100; // horizontal speed
-    this.spritePace = 0;
   }
+
   walk(secondsPassed) {
     if (!this.isFlying) {
       this.x += this.speed * secondsPassed;
-      if (++this.spritePace === 2) {
-        this.activeSprite++;
-        this.spritePace = 0;
-      }
+      this.activeSprite += 0.5; // slow down the animation
       if (this.activeSprite === this.sprites) this.activeSprite = 1;
       if (game.collision(this)) this.speed = -this.speed;
       if (!this.isRotating) {
@@ -76,6 +75,7 @@ class Background {
     this.sx = 0;
     this.sy = 0;
   }
+
   draw(ctx, canvas, hero) {
     this.calcPosition(canvas, hero);
     ctx.drawImage(
@@ -90,6 +90,7 @@ class Background {
       canvas.height
     );
   }
+
   calcPosition(canvas, hero) {
     // horizontal parallax effect
     this.sx =
