@@ -11,6 +11,8 @@ const game = {
 
   start() {
     this.keyboard = new Keyboard();
+    this.sound = new Sound();
+    this.intro = new Intro(this.ctx, this.canvas);
     this.levelN = 0;
     this.reset();
 
@@ -41,6 +43,7 @@ const game = {
         this.levelN++;
         this.reset();
       }
+      if (this.levelN === 0) this.intro.run(secondsPassed);
 
       window.requestAnimationFrame(gameLoop);
     };
@@ -50,6 +53,8 @@ const game = {
   reset() {
     //level creation
     if (levels[this.levelN] === undefined) this.levelN = 0;
+    if (this.levelN === 0) this.intro.reset();
+    if (this.levelN === 1) this.sound.init();
     this.level = new Level(levels[this.levelN]);
 
     // background creation
@@ -189,13 +194,16 @@ const game = {
       // check if the enemy is going to fall and avoid it
       if (
         (character.speed < 0 &&
-          character.x + character.margin - this.level.brickSize >= brick[0] &&
+          character.x + character.margin /*- this.level.brickSize*/ >=
+            brick[0] &&
           character.x + character.margin - this.level.brickSize <=
             brick[0] + this.level.brickSize) ||
         (character.speed > 0 &&
           character.x + character.w - character.margin + this.level.brickSize >=
             brick[0] &&
-          character.x + character.w - character.margin + this.level.brickSize <=
+          character.x +
+            character.w -
+            character.margin /*+ this.level.brickSize*/ <=
             brick[0] + this.level.brickSize)
       ) {
         if (
