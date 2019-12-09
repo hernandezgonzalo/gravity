@@ -11,7 +11,7 @@ class Character {
     this.image = new Image();
     this.sprites = 19;
     this.activeSprite = 0;
-    this.margin = 25;
+    this.margin = 25; // margin to fall down when the feet are not in the floor
     this.alive = true;
   }
 
@@ -30,7 +30,6 @@ class Character {
       this.w,
       this.h
     );
-    ctx.restore();
   }
 }
 

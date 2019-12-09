@@ -48,11 +48,16 @@ const game = {
   },
 
   reset() {
-    this.sky = new Sky();
-
     //level creation
     if (levels[this.levelN] === undefined) this.levelN = 0;
     this.level = new Level(levels[this.levelN]);
+
+    // background creation
+    this.sky = new Sky();
+    this.backgrounds = [];
+    this.backgrounds.push(new Background("./img/bg-back.png", 1050, 700));
+    this.backgrounds.push(new Background("./img/bg-mid.png", 1100, 733));
+    this.backgrounds.push(new Background("./img/bg-front.png", 1150, 767));
 
     // characters creation
     this.hero = Object.assign(new Hero(), this.level.hero);
@@ -61,24 +66,19 @@ const game = {
     this.level.enemies.forEach(enemy => {
       this.enemies.push(Object.assign(new Enemy(), enemy));
     });
-
-    // background creation
-    this.backgrounds = [];
-    this.backgrounds.push(new Background("./img/bg-back.png", 950, 633));
-    this.backgrounds.push(new Background("./img/bg-mid.png", 1000, 667));
-    this.backgrounds.push(new Background("./img/bg-front.png", 1050, 700));
   },
 
   update(character, secondsPassed) {
-    this.rotation(character);
+    this.ctx.save();
     this.gravity(character, secondsPassed);
     this.collision(character);
+    this.rotation(character);
     character.draw(this.ctx);
+    this.ctx.restore();
   },
 
   rotation(character) {
     let rotate = degrees => {
-      this.ctx.save();
       let xTranslate = character.x + character.w / 2;
       let yTranslate = character.y + character.h / 2;
       this.ctx.translate(xTranslate, yTranslate);
@@ -165,26 +165,24 @@ const game = {
         // check if the character is colliding with the top of a brick
         if (
           character.y + character.h >= brick[1] &&
-          character.y + character.h < brick[1] + this.level.brickSize
+          character.y + character.h < brick[1] + this.level.brickSize &&
+          character.gravitySpeed > 0
         ) {
-          if (character.gravitySpeed > 0) {
-            character.y = brick[1] - character.h;
-            character.isFlying = false;
-            character.gravitySpeed = 1;
-            if (brick[2]) explosiveBrick = true;
-          }
+          character.y = brick[1] - character.h;
+          character.isFlying = false;
+          character.gravitySpeed = 1;
+          if (brick[2]) explosiveBrick = true;
         }
         // check if the character is colliding with the bottom of a brick
         if (
           character.y <= brick[1] + this.level.brickSize &&
-          character.y > brick[1]
+          character.y > brick[1] &&
+          character.gravitySpeed < 0
         ) {
-          if (character.gravitySpeed < 0) {
-            character.y = brick[1] + this.level.brickSize;
-            character.isFlying = false;
-            character.gravitySpeed = -1;
-            if (brick[2]) explosiveBrick = true;
-          }
+          character.y = brick[1] + this.level.brickSize;
+          character.isFlying = false;
+          character.gravitySpeed = -1;
+          if (brick[2]) explosiveBrick = true;
         }
       }
 

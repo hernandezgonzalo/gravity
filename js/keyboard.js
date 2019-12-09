@@ -3,6 +3,8 @@ class Keyboard {
     this.playerKeys = {
       left: 37,
       right: 39,
+      up: 38,
+      down: 40,
       action: 90
     };
     this.rightPressed = false;
@@ -16,7 +18,15 @@ class Keyboard {
       this.leftPressed = true;
     } else if (e.keyCode === this.playerKeys.right) {
       this.rightPressed = true;
-    } else if (e.keyCode === this.playerKeys.action && !game.hero.isFlying) {
+    } else if (
+      (e.keyCode === this.playerKeys.action && !game.hero.isFlying) ||
+      (e.keyCode === this.playerKeys.up &&
+        !game.hero.isFlying &&
+        game.hero.gravitySpeed > 0) ||
+      (e.keyCode === this.playerKeys.down &&
+        !game.hero.isFlying &&
+        game.hero.gravitySpeed < 0)
+    ) {
       game.hero.gravitySpeed = -game.hero.gravitySpeed;
       game.hero.isFlying = true;
       game.hero.isRotating = true;
@@ -51,6 +61,5 @@ class Keyboard {
     } else {
       character.activeSprite = 0;
     }
-    game.collision(character);
   }
 }
