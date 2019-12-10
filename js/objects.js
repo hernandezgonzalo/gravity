@@ -125,6 +125,7 @@ class Transition {
     this.opacity = 1;
     this.speed = 100;
     this.direction = -1;
+    this.isFadingOut = false;
   }
 
   draw(secondsPassed) {
@@ -132,7 +133,6 @@ class Transition {
     if (this.opacity < 0) this.opacity = 0;
     else if (this.opacity > 1) this.opacity = 1;
     if (this.opacity > 0 && this.opacity <= 1) {
-      console.log(this.opacity);
       this.ctx.save();
       this.ctx.globalAlpha = this.opacity;
       this.ctx.fillStyle = "#175894";

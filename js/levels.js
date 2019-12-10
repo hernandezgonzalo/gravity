@@ -7,6 +7,7 @@ class Level {
     this.target = new Image();
     this.target.src = "./img/target.png";
     this.targetSprites = 16;
+    this.targetOpacity = 1;
     this.activeTargetSprite = 0;
     this.bricks = data.bricks;
     this.brickSize = 20; // size of the bricks in pixeles
@@ -14,6 +15,8 @@ class Level {
     this.brick.src = "./img/brick.png";
     this.explosive = new Image();
     this.explosive.src = "./img/explosive.png";
+    this.levelFinished = false;
+    this.resetLevel = false;
   }
 
   drawBricks(ctx) {
@@ -38,10 +41,14 @@ class Level {
     });
   }
 
-  drawTarget(ctx) {
+  drawTarget(ctx, secondsPassed) {
+    ctx.save();
     this.activeTargetSprite += 0.25;
     if (this.activeTargetSprite === this.targetSprites)
       this.activeTargetSprite = 0;
+    if (this.levelFinished) this.targetOpacity -= secondsPassed * 3;
+    //console.log(this.targetOpacity);
+    ctx.globalAlpha = this.targetOpacity > 0 ? this.targetOpacity : 0;
     ctx.drawImage(
       this.target,
       this.targetSize * Math.floor(this.activeTargetSprite),
@@ -53,6 +60,7 @@ class Level {
       this.targetSize,
       this.targetSize
     );
+    ctx.restore();
   }
 }
 

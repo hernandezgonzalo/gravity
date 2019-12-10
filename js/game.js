@@ -2,9 +2,6 @@ const game = {
   canvas: undefined,
   ctx: undefined,
   gravityForce: 80,
-  levelFinished: false,
-  resetLevel: false,
-  isFadingOut: false,
 
   init() {
     this.canvas = document.getElementById("canvas");
@@ -32,8 +29,8 @@ const game = {
         bg.draw(this.ctx, this.canvas, this.hero);
       });
       this.level.drawBricks(this.ctx);
-      this.level.drawTarget(this.ctx);
-      if (this.hero.alive || this.levelFinished)
+      this.level.drawTarget(this.ctx, secondsPassed);
+      if (this.hero.alive || this.level.levelFinished)
         this.keyboard.controller(this.hero, secondsPassed);
       this.update(this.hero, secondsPassed);
       this.enemies.forEach(enemy => {
@@ -43,8 +40,10 @@ const game = {
         }
       });
       this.enemyCollision();
-      if (!this.hero.alive && !this.levelFinished) this.resetLevel = true;
-      if (this.targetCompleted() && this.hero.alive) this.levelFinished = true;
+      if (!this.hero.alive && !this.level.levelFinished)
+        this.level.resetLevel = true;
+      if (this.targetCompleted() && this.hero.alive)
+        this.level.levelFinished = true;
       if (this.levelN === 0) this.intro.run(secondsPassed);
       this.screenTransition(secondsPassed);
 
@@ -56,11 +55,11 @@ const game = {
   screenTransition(secondsPassed) {
     this.transition.direction = -1; // fade in transition
 
-    if (this.levelFinished || this.resetLevel) {
+    if (this.level.levelFinished || this.level.resetLevel) {
       this.transition.direction = 1; // fade out transition
-      this.isFadingOut = this.transition.opacity < 1 ? true : false;
-      if (!this.isFadingOut) {
-        if (this.levelFinished && !this.resetLevel) this.levelN++;
+      this.transition.isFadingOut = this.transition.opacity < 1 ? true : false;
+      if (!this.transition.isFadingOut) {
+        if (this.level.levelFinished && !this.level.resetLevel) this.levelN++;
         this.reset();
       }
     }
@@ -69,10 +68,6 @@ const game = {
   },
 
   reset() {
-    // transitions control
-    this.levelFinished = false;
-    this.resetLevel = false;
-
     // level creation
     if (levels[this.levelN] === undefined) this.levelN = 0;
     if (this.levelN === 0) this.intro.reset();
