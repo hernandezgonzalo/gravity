@@ -47,11 +47,13 @@ class Keyboard {
         if (!character.isRotating)
           character.isLookingLeft = character.gravitySpeed > 0 ? 0 : 1;
         character.activeSprite++;
+        if (!character.isFlying) this.game.sound.step.play();
       } else if (this.leftPressed) {
         character.x -= character.speed * secondsPassed;
         if (!character.isRotating)
           character.isLookingLeft = character.gravitySpeed < 0 ? 0 : 1;
         character.activeSprite++;
+        if (!character.isFlying) this.game.sound.step.play();
       } else {
         character.activeSprite = 0;
       }
@@ -68,6 +70,7 @@ class Keyboard {
       enemy.isRotating = true;
       enemy.speed = -enemy.speed;
     });
+    this.game.sound.action.play();
   }
 
   isKeyboardActived() {

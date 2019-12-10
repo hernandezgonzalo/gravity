@@ -31,8 +31,6 @@ class Intro {
     if (this.speed < -this.maxSpeed) this.speed = -this.maxSpeed;
     this.y += this.speed * secondsPassed;
 
-    //console.log(this.y);
-    //console.log(this.speed);
     this.ctx.save();
     let xTranslate = this.canvas.width / 2;
     let yTranslate = this.y + this.imageHeight / 2;

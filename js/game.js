@@ -41,8 +41,10 @@ const game = {
       this.enemyCollision();
       if (!this.hero.alive && !this.level.levelFinished)
         this.level.resetLevel = true;
-      if (this.targetCompleted() && this.hero.alive)
+      if (this.targetCompleted() && this.hero.alive) {
+        if (!this.level.levelFinished) this.sound.target.play();
         this.level.levelFinished = true;
+      }
       if (this.levelN === 0) this.intro.run(secondsPassed);
       this.screenTransition(secondsPassed);
 
@@ -234,9 +236,24 @@ const game = {
       }
     });
 
-    if (character.y + character.h < 0 || character.y > this.canvas.height)
+    if (character.y + character.h < 0 || character.y > this.canvas.height) {
+      if (
+        character instanceof Hero &&
+        this.hero.alive &&
+        !this.level.levelFinished
+      )
+        this.sound.death.play();
       character.alive = false;
-    if (character instanceof Hero && explosiveBrick) character.alive = false;
+    }
+    if (
+      character instanceof Hero &&
+      character.alive &&
+      explosiveBrick &&
+      !this.level.levelFinished
+    ) {
+      this.sound.death.play();
+      character.alive = false;
+    }
     if (character instanceof Enemy) return sideCollision || fallDown;
   },
 
@@ -250,8 +267,10 @@ const game = {
           this.hero.y + this.hero.h - m > enemy.y + m &&
           enemy.y + enemy.h - m * 2 > this.hero.y + m * 2
       )
-    )
+    ) {
+      if (this.hero.alive && !this.level.levelFinished) this.sound.death.play();
       this.hero.alive = false;
+    }
   },
 
   targetCompleted() {
