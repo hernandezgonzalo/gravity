@@ -1,5 +1,6 @@
 class Keyboard {
-  constructor() {
+  constructor(game) {
+    this.game = game;
     this.playerKeys = {
       left: 37,
       right: 39,
@@ -19,18 +20,18 @@ class Keyboard {
     } else if (e.keyCode === this.playerKeys.right) {
       this.rightPressed = true;
     } else if (
-      (e.keyCode === this.playerKeys.action && !game.hero.isFlying) ||
+      (e.keyCode === this.playerKeys.action && !this.game.hero.isFlying) ||
       (e.keyCode === this.playerKeys.up &&
-        !game.hero.isFlying &&
-        game.hero.gravitySpeed > 0) ||
+        !this.game.hero.isFlying &&
+        this.game.hero.gravitySpeed > 0) ||
       (e.keyCode === this.playerKeys.down &&
-        !game.hero.isFlying &&
-        game.hero.gravitySpeed < 0)
+        !this.game.hero.isFlying &&
+        this.game.hero.gravitySpeed < 0)
     ) {
-      game.hero.gravitySpeed = -game.hero.gravitySpeed;
-      game.hero.isFlying = true;
-      game.hero.isRotating = true;
-      game.enemies.forEach(enemy => {
+      this.game.hero.gravitySpeed = -this.game.hero.gravitySpeed;
+      this.game.hero.isFlying = true;
+      this.game.hero.isRotating = true;
+      this.game.enemies.forEach(enemy => {
         enemy.gravitySpeed = -Math.sign(enemy.gravitySpeed);
         enemy.isFlying = true;
         enemy.isRotating = true;

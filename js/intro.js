@@ -4,8 +4,8 @@ class Intro {
     this.canvas = canvas;
     this.image = new Image();
     this.image.src = "./img/logo.svg";
-    this.imageW = 500;
-    this.imageH = 117;
+    this.imageWidth = 500;
+    this.imageHeight = 117;
     this.maxSpeed = 100;
   }
 
@@ -25,7 +25,7 @@ class Intro {
 
   drawLogo(secondsPassed) {
     if (this.y > 135) this.bound = -2;
-    if (this.y < 134) this.bound = 2;
+    if (this.y < 135) this.bound = 2;
     this.speed += this.bound;
     if (this.speed > this.maxSpeed) this.speed = this.maxSpeed;
     if (this.speed < -this.maxSpeed) this.speed = -this.maxSpeed;
@@ -35,11 +35,17 @@ class Intro {
     //console.log(this.speed);
     this.ctx.save();
     let xTranslate = this.canvas.width / 2;
-    let yTranslate = this.y + this.imageH / 2;
+    let yTranslate = this.y + this.imageHeight / 2;
     this.ctx.translate(xTranslate, yTranslate);
     this.ctx.rotate((Math.PI / 180) * (this.speed / 25));
     this.ctx.translate(-xTranslate, -yTranslate);
-    this.ctx.drawImage(this.image, 250, this.y, this.imageW, this.imageH);
+    this.ctx.drawImage(
+      this.image,
+      250,
+      this.y,
+      this.imageWidth,
+      this.imageHeight
+    );
     this.ctx.restore();
   }
 

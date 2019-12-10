@@ -11,7 +11,7 @@ const game = {
 
   start() {
     this.transition = new Transition(this.ctx, this.canvas);
-    this.keyboard = new Keyboard();
+    this.keyboard = new Keyboard(this);
     this.sound = new Sound();
     this.intro = new Intro(this.ctx, this.canvas);
     this.levelN = 0;
