@@ -30,8 +30,7 @@ const game = {
       });
       this.level.drawBricks(this.ctx);
       this.level.drawTarget(this.ctx, secondsPassed);
-      if (this.hero.alive || this.level.levelFinished)
-        this.keyboard.controller(this.hero, secondsPassed);
+      this.keyboard.controller(this.hero, secondsPassed);
       this.update(this.hero, secondsPassed);
       this.enemies.forEach(enemy => {
         if (enemy.alive) {

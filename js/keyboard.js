@@ -28,39 +28,49 @@ class Keyboard {
         !this.game.hero.isFlying &&
         this.game.hero.gravitySpeed < 0)
     ) {
-      this.game.hero.gravitySpeed = -this.game.hero.gravitySpeed;
-      this.game.hero.isFlying = true;
-      this.game.hero.isRotating = true;
-      this.game.enemies.forEach(enemy => {
-        enemy.gravitySpeed = -Math.sign(enemy.gravitySpeed);
-        enemy.isFlying = true;
-        enemy.isRotating = true;
-        enemy.speed = -enemy.speed;
-      });
+      if (this.isKeyboardActived()) this.doAction();
     }
   }
 
   keyUpHandler(e) {
-    if (e.keyCode === this.playerKeys.right) {
-      this.rightPressed = false;
-    } else if (e.keyCode === this.playerKeys.left) {
+    if (e.keyCode === this.playerKeys.left) {
       this.leftPressed = false;
+    } else if (e.keyCode === this.playerKeys.right) {
+      this.rightPressed = false;
     }
   }
 
   controller(character, secondsPassed) {
-    if (this.rightPressed) {
-      character.x += character.speed * secondsPassed;
-      if (!character.isRotating)
-        character.isLookingLeft = character.gravitySpeed > 0 ? 0 : 1;
-      character.activeSprite++;
-    } else if (this.leftPressed) {
-      character.x -= character.speed * secondsPassed;
-      if (!character.isRotating)
-        character.isLookingLeft = character.gravitySpeed < 0 ? 0 : 1;
-      character.activeSprite++;
-    } else {
-      character.activeSprite = 0;
+    if (this.isKeyboardActived()) {
+      if (this.rightPressed) {
+        character.x += character.speed * secondsPassed;
+        if (!character.isRotating)
+          character.isLookingLeft = character.gravitySpeed > 0 ? 0 : 1;
+        character.activeSprite++;
+      } else if (this.leftPressed) {
+        character.x -= character.speed * secondsPassed;
+        if (!character.isRotating)
+          character.isLookingLeft = character.gravitySpeed < 0 ? 0 : 1;
+        character.activeSprite++;
+      } else {
+        character.activeSprite = 0;
+      }
     }
+  }
+
+  doAction() {
+    this.game.hero.gravitySpeed = -this.game.hero.gravitySpeed;
+    this.game.hero.isFlying = true;
+    this.game.hero.isRotating = true;
+    this.game.enemies.forEach(enemy => {
+      enemy.gravitySpeed = -Math.sign(enemy.gravitySpeed);
+      enemy.isFlying = true;
+      enemy.isRotating = true;
+      enemy.speed = -enemy.speed;
+    });
+  }
+
+  isKeyboardActived() {
+    return this.game.hero.alive || this.game.level.levelFinished;
   }
 }
