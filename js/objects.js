@@ -117,3 +117,27 @@ class Sky {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 }
+
+class Transition {
+  constructor(ctx, canvas) {
+    this.ctx = ctx;
+    this.canvas = canvas;
+    this.opacity = 1;
+    this.speed = 100;
+    this.direction = -1;
+  }
+
+  draw(secondsPassed) {
+    this.opacity += (this.speed * this.direction * secondsPassed) / 100;
+    if (this.opacity < 0) this.opacity = 0;
+    else if (this.opacity > 1) this.opacity = 1;
+    if (this.opacity > 0 && this.opacity <= 1) {
+      console.log(this.opacity);
+      this.ctx.save();
+      this.ctx.globalAlpha = this.opacity;
+      this.ctx.fillStyle = "#175894";
+      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+      this.ctx.restore();
+    }
+  }
+}
