@@ -14,7 +14,7 @@ const game = {
     this.keyboard = new Keyboard(this);
     this.sound = new Sound();
     this.intro = new Intro(this.ctx, this.canvas);
-    this.levelN = 0;
+    this.levelN = 2;
     this.reset();
 
     let oldTimeStamp = 0;
@@ -25,9 +25,9 @@ const game = {
 
       // game loop
       this.sky.draw(this.ctx, this.canvas);
-      this.backgrounds.forEach(bg => {
+      /*this.backgrounds.forEach(bg => {
         bg.draw(this.ctx, this.canvas, this.hero);
-      });
+      });*/
       this.level.drawBricks(this.ctx);
       this.level.drawTarget(this.ctx, secondsPassed);
       this.keyboard.controller(this.hero, secondsPassed);

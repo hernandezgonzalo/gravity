@@ -4,9 +4,9 @@ class Keyboard {
     this.playerKeys = {
       left: 37,
       right: 39,
-      up: 38,
-      down: 40,
-      action: 90,
+      //up: 38,
+      //down: 40,
+      //action: 90,
       sound: 77
     };
     this.rightPressed = false;
