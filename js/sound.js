@@ -1,30 +1,37 @@
 class Sound {
-  constructor() {
+  constructor(game) {
     this.music = new Audio("./audio/music.ogg");
     this.step = new Audio("./audio/step.wav");
     this.action = new Audio("./audio/action.wav");
     this.target = new Audio("./audio/target.wav");
     this.death = new Audio("./audio/death.wav");
+    this.mute = false;
   }
 
   init() {
     this.music.loop = true;
-    this.music.play();
+    if (!this.mute) this.music.play();
   }
 
-  step() {
-    this.step.play();
+  toggleSound() {
+    this.mute = !this.mute;
+    if (this.mute) this.music.pause();
+    else this.music.play();
   }
 
-  action() {
-    this.action.play();
+  stepPlay() {
+    if (!this.mute) this.step.play();
   }
 
-  target() {
-    this.target.play();
+  actionPlay() {
+    if (!this.mute) this.action.play();
   }
 
-  death() {
-    this.death.play();
+  targetPlay() {
+    if (!this.mute) this.target.play();
+  }
+
+  deathPlay() {
+    if (!this.mute) this.death.play();
   }
 }

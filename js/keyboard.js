@@ -6,7 +6,8 @@ class Keyboard {
       right: 39,
       up: 38,
       down: 40,
-      action: 90
+      action: 90,
+      sound: 77
     };
     this.rightPressed = false;
     this.leftPressed = false;
@@ -33,11 +34,9 @@ class Keyboard {
   }
 
   keyUpHandler(e) {
-    if (e.keyCode === this.playerKeys.left) {
-      this.leftPressed = false;
-    } else if (e.keyCode === this.playerKeys.right) {
-      this.rightPressed = false;
-    }
+    if (e.keyCode === this.playerKeys.left) this.leftPressed = false;
+    else if (e.keyCode === this.playerKeys.right) this.rightPressed = false;
+    else if (e.keyCode === this.playerKeys.sound) this.game.sound.toggleSound();
   }
 
   controller(character, secondsPassed) {
@@ -47,13 +46,13 @@ class Keyboard {
         if (!character.isRotating)
           character.isLookingLeft = character.gravitySpeed > 0 ? 0 : 1;
         character.activeSprite++;
-        if (!character.isFlying) this.game.sound.step.play();
+        if (!character.isFlying) this.game.sound.stepPlay();
       } else if (this.leftPressed) {
         character.x -= character.speed * secondsPassed;
         if (!character.isRotating)
           character.isLookingLeft = character.gravitySpeed < 0 ? 0 : 1;
         character.activeSprite++;
-        if (!character.isFlying) this.game.sound.step.play();
+        if (!character.isFlying) this.game.sound.stepPlay();
       } else {
         character.activeSprite = 0;
       }
@@ -70,7 +69,7 @@ class Keyboard {
       enemy.isRotating = true;
       enemy.speed = -enemy.speed;
     });
-    this.game.sound.action.play();
+    this.game.sound.actionPlay();
   }
 
   isKeyboardActived() {

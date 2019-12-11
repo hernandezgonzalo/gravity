@@ -42,7 +42,7 @@ const game = {
       if (!this.hero.alive && !this.level.levelFinished)
         this.level.resetLevel = true;
       if (this.targetCompleted() && this.hero.alive) {
-        if (!this.level.levelFinished) this.sound.target.play();
+        if (!this.level.levelFinished) this.sound.targetPlay();
         this.level.levelFinished = true;
       }
       if (this.levelN === 0) this.intro.run(secondsPassed);
@@ -242,7 +242,7 @@ const game = {
         this.hero.alive &&
         !this.level.levelFinished
       )
-        this.sound.death.play();
+        this.sound.deathPlay();
       character.alive = false;
     }
     if (
@@ -251,7 +251,7 @@ const game = {
       explosiveBrick &&
       !this.level.levelFinished
     ) {
-      this.sound.death.play();
+      this.sound.deathPlay();
       character.alive = false;
     }
     if (character instanceof Enemy) return sideCollision || fallDown;
@@ -265,10 +265,10 @@ const game = {
           this.hero.x + this.hero.w - m > enemy.x + m &&
           enemy.x + enemy.w - m > this.hero.x + m &&
           this.hero.y + this.hero.h - m > enemy.y + m &&
-          enemy.y + enemy.h - m * 2 > this.hero.y + m * 2
+          enemy.y + enemy.h - m > this.hero.y + m
       )
     ) {
-      if (this.hero.alive && !this.level.levelFinished) this.sound.death.play();
+      if (this.hero.alive && !this.level.levelFinished) this.sound.deathPlay();
       this.hero.alive = false;
     }
   },
@@ -279,7 +279,7 @@ const game = {
       this.hero.x + this.hero.w - m > this.level.targetPos[0] &&
       this.level.targetPos[0] + this.level.targetSize > this.hero.x + m &&
       this.hero.y + this.hero.h - m > this.level.targetPos[1] &&
-      this.level.targetPos[1] + this.level.targetSize > this.hero.y + m * 2
+      this.level.targetPos[1] + this.level.targetSize > this.hero.y + m
     );
   }
 };
