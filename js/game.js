@@ -13,8 +13,11 @@ const game = {
     this.transition = new Transition(this.ctx, this.canvas);
     this.keyboard = new Keyboard(this);
     this.sound = new Sound();
+    this.score = new Score();
     this.intro = new Intro(this.ctx, this.canvas);
-    this.levelN = 2;
+    this.levelN = 0;
+    this.deaths = 0;
+
     this.reset();
 
     let oldTimeStamp = 0;
@@ -25,12 +28,19 @@ const game = {
 
       // game loop
       this.sky.draw(this.ctx, this.canvas);
-      /*this.backgrounds.forEach(bg => {
+      this.backgrounds.forEach(bg => {
         bg.draw(this.ctx, this.canvas, this.hero);
-      });*/
+      });
       this.level.drawBricks(this.ctx);
       this.level.drawTarget(this.ctx, secondsPassed);
       this.keyboard.controller(this.hero, secondsPassed);
+      if (this.levelN !== 0)
+        this.score.draw(
+          this.ctx,
+          this.levelN - 1,
+          this.deaths,
+          this.sound.mute
+        );
       this.update(this.hero, secondsPassed);
       this.enemies.forEach(enemy => {
         if (enemy.alive) {
@@ -61,6 +71,7 @@ const game = {
       this.transition.isFadingOut = this.transition.opacity < 1 ? true : false;
       if (!this.transition.isFadingOut) {
         if (this.level.levelFinished && !this.level.resetLevel) this.levelN++;
+        else if (this.level.resetLevel && this.levelN !== 0) this.deaths++;
         this.reset();
       }
     }
@@ -71,7 +82,10 @@ const game = {
   reset() {
     // level creation
     if (levels[this.levelN] === undefined) this.levelN = 0;
-    if (this.levelN === 0) this.intro.reset();
+    if (this.levelN === 0) {
+      this.deaths = 0;
+      this.intro.reset();
+    }
     if (this.levelN === 1) this.sound.init();
     this.level = new Level(levels[this.levelN]);
 

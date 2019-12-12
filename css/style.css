@@ -1,6 +1,11 @@
 @font-face {
   font-family: "Kenney Future";
-  src: url("./../fonts/kenney.ttf");
+  src: url("./../fonts/kenney-future.ttf");
+}
+
+@font-face {
+  font-family: "Kenney High Square";
+  src: url("./../fonts/kenney-high-square.ttf");
 }
 
 body {

@@ -141,3 +141,28 @@ class Transition {
     }
   }
 }
+
+class Score {
+  constructor() {
+    this.targetsImg = new Image();
+    this.targetsImg.src = "./img/score-targets.png";
+    this.deathsImg = new Image();
+    this.deathsImg.src = "./img/score-deaths.png";
+    this.muteImg = new Image();
+    this.muteImg.src = "./img/score-mute.png";
+  }
+  draw(ctx, targets, deaths, mute) {
+    ctx.save();
+    ctx.globalAlpha = 0.9;
+    ctx.drawImage(this.targetsImg, 10, 10, 30, 30);
+    ctx.drawImage(this.deathsImg, 90, 10, 30, 30);
+    if (mute) ctx.drawImage(this.muteImg, 960, 10, 30, 30);
+    ctx.font = "40px Kenney High Square";
+    ctx.fillStyle = "#FFFFFF";
+    ctx.textAlign = "left";
+    ctx.textBaseline = "middle";
+    ctx.fillText(targets, 50, 17);
+    ctx.fillText(deaths, 130, 17);
+    ctx.restore();
+  }
+}
