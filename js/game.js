@@ -12,10 +12,10 @@ const game = {
   start() {
     this.transition = new Transition(this.ctx, this.canvas);
     this.keyboard = new Keyboard(this);
-    this.sound = new Sound();
+    this.sound = new Sound(this);
     this.score = new Score();
     this.intro = new Intro(this.ctx, this.canvas);
-    this.levelN = 0;
+    this.levelN = 1;
     this.deaths = 0;
 
     this.reset();
@@ -28,8 +28,9 @@ const game = {
 
       // game loop
       this.sky.draw(this.ctx, this.canvas);
-      this.backgrounds.forEach(bg => {
-        bg.draw(this.ctx, this.canvas, this.hero);
+      if (this.levelN !== 0) this.clouds[0].update(secondsPassed);
+      this.backgrounds.forEach(background => {
+        background.draw(this.ctx, this.canvas, this.hero);
       });
       this.level.drawBricks(this.ctx);
       this.level.drawTarget(this.ctx, secondsPassed);
@@ -86,7 +87,7 @@ const game = {
       this.deaths = 0;
       this.intro.reset();
     }
-    if (this.levelN === 1) this.sound.init();
+    if (this.levelN > 0 && !this.sound.mute) this.sound.init();
     this.level = new Level(levels[this.levelN]);
 
     // background creation
@@ -95,6 +96,10 @@ const game = {
     this.backgrounds.push(new Background("./img/bg-back.png", 1050, 700));
     this.backgrounds.push(new Background("./img/bg-mid.png", 1100, 733));
     this.backgrounds.push(new Background("./img/bg-front.png", 1150, 767));
+
+    // clouds creation
+    this.clouds = [];
+    this.clouds.push(new Cloud(this.canvas, this.ctx));
 
     // characters creation
     this.hero = Object.assign(new Hero(), this.level.hero);

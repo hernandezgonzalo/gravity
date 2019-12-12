@@ -166,3 +166,35 @@ class Score {
     ctx.restore();
   }
 }
+
+class Cloud {
+  constructor(canvas, ctx) {
+    this.canvas = canvas;
+    this.ctx = ctx;
+    this.image = new Image();
+    this.image.src = "./img/cloud.png";
+    this.maxWidth = 200;
+    this.maxHeight = 150;
+    this.minSpeed = 5;
+    this.maxSpeed = 15;
+    this.create();
+  }
+  create() {
+    this.x = Math.random() * this.canvas.width;
+    this.y = Math.random() * (this.canvas.height / 3);
+    this.width = Math.random() * (this.maxWidth / 2) + this.maxWidth / 2;
+    this.height = (this.maxHeight / this.maxWidth) * this.width;
+    this.speed =
+      Math.random() * (this.maxSpeed - this.minSpeed) + this.minSpeed;
+  }
+  update(secondsPassed) {
+    this.x -= this.speed * secondsPassed;
+    this.draw();
+  }
+  draw() {
+    this.ctx.save();
+    this.ctx.globalAlpha = 0.75;
+    this.ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+    this.ctx.restore();
+  }
+}

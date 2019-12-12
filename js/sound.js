@@ -1,5 +1,6 @@
 class Sound {
   constructor(game) {
+    this.game = game;
     this.music = new Audio("./audio/music.ogg");
     this.step = new Audio("./audio/step.wav");
     this.action = new Audio("./audio/action.wav");
@@ -10,13 +11,13 @@ class Sound {
 
   init() {
     this.music.loop = true;
-    if (!this.mute) this.music.play();
+    if (!this.mute && this.game.levelN > 0) this.music.play();
   }
 
   toggleSound() {
     this.mute = !this.mute;
     if (this.mute) this.music.pause();
-    else this.music.play();
+    else if (this.game.levelN > 0) this.music.play();
   }
 
   stepPlay() {
