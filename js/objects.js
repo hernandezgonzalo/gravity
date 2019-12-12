@@ -179,8 +179,9 @@ class Cloud {
     this.maxSpeed = 15;
     this.create();
   }
-  create() {
-    this.x = Math.random() * this.canvas.width;
+  create(outOfBounds = false) {
+    if (outOfBounds) this.x = this.canvas.width;
+    else this.x = Math.random() * this.canvas.width;
     this.y = Math.random() * (this.canvas.height / 3);
     this.width = Math.random() * (this.maxWidth / 2) + this.maxWidth / 2;
     this.height = (this.maxHeight / this.maxWidth) * this.width;
@@ -188,6 +189,7 @@ class Cloud {
       Math.random() * (this.maxSpeed - this.minSpeed) + this.minSpeed;
   }
   update(secondsPassed) {
+    if (this.x + this.width < 0) this.create(true);
     this.x -= this.speed * secondsPassed;
     this.draw();
   }

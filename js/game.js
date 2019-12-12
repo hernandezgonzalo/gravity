@@ -2,6 +2,7 @@ const game = {
   canvas: undefined,
   ctx: undefined,
   gravityForce: 80,
+  cloudsN: 3,
 
   init() {
     this.canvas = document.getElementById("canvas");
@@ -28,7 +29,11 @@ const game = {
 
       // game loop
       this.sky.draw(this.ctx, this.canvas);
-      if (this.levelN !== 0) this.clouds[0].update(secondsPassed);
+      if (this.levelN !== 0) {
+        this.clouds.forEach(cloud => {
+          cloud.update(secondsPassed);
+        });
+      }
       this.backgrounds.forEach(background => {
         background.draw(this.ctx, this.canvas, this.hero);
       });
@@ -99,7 +104,8 @@ const game = {
 
     // clouds creation
     this.clouds = [];
-    this.clouds.push(new Cloud(this.canvas, this.ctx));
+    for (let i = 0; i < this.cloudsN; i++)
+      this.clouds.push(new Cloud(this.canvas, this.ctx));
 
     // characters creation
     this.hero = Object.assign(new Hero(), this.level.hero);
