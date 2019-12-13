@@ -47,7 +47,6 @@ class Level {
     if (this.activeTargetSprite === this.targetSprites)
       this.activeTargetSprite = 0;
     if (this.levelFinished) this.targetOpacity -= secondsPassed * 3;
-    //console.log(this.targetOpacity);
     ctx.globalAlpha = this.targetOpacity > 0 ? this.targetOpacity : 0;
     ctx.drawImage(
       this.target,

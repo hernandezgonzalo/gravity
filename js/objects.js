@@ -4,7 +4,7 @@ class Character {
     this.y = y;
     this.w = 65;
     this.h = 51;
-    this.gravitySpeed = 1; // the highest is 10
+    this.gravitySpeed = 1; // the highest is +-10
     this.isFlying = true;
     this.isRotating = false;
     this.isLookingLeft = 0; // defines the row of the sprite sheet
@@ -61,6 +61,8 @@ class Enemy extends Character {
           this.isLookingLeft = this.gravitySpeed < 0 ? 0 : 1;
         }
       }
+    } else {
+      this.activeSprite = 0;
     }
   }
 }
@@ -151,6 +153,7 @@ class Score {
     this.muteImg = new Image();
     this.muteImg.src = "./img/score-mute.png";
   }
+
   draw(ctx, targets, deaths, mute) {
     ctx.save();
     ctx.globalAlpha = 0.9;
@@ -179,6 +182,7 @@ class Cloud {
     this.maxSpeed = 15;
     this.create();
   }
+
   create(outOfBounds = false) {
     if (outOfBounds) this.x = this.canvas.width;
     else this.x = Math.random() * this.canvas.width;
@@ -188,15 +192,58 @@ class Cloud {
     this.speed =
       Math.random() * (this.maxSpeed - this.minSpeed) + this.minSpeed;
   }
+
   update(secondsPassed) {
-    if (this.x + this.width < 0) this.create(true);
     this.x -= this.speed * secondsPassed;
+    if (this.x + this.width < 0) this.create(true);
     this.draw();
   }
+
   draw() {
     this.ctx.save();
     this.ctx.globalAlpha = 0.75;
     this.ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+    this.ctx.restore();
+  }
+}
+
+class Snowflake {
+  constructor(canvas, ctx) {
+    this.canvas = canvas;
+    this.ctx = ctx;
+    this.image = new Image();
+    this.image.src = "./img/circle.png";
+    this.minSize = 5;
+    this.maxSize = 20;
+    this.maxSpeed = 30;
+    this.speed = this.maxSpeed;
+    this.create();
+  }
+
+  create(outOfBounds = false) {
+    this.size = Math.random() * (this.maxSize - this.minSize) + this.minSize;
+    if (outOfBounds)
+      if (this.speed > 0) this.y = -this.size;
+      else this.y = this.canvas.height / 2;
+    else this.y = Math.random() * (this.canvas.height / 2);
+    this.x = Math.random() * this.canvas.width;
+  }
+
+  update(secondsPassed, gravity) {
+    let gravitySpeed = gravity === 0 ? 0 : gravity > 0 ? 0.5 : -0.5;
+    this.speed += gravitySpeed;
+    if (this.speed < -this.maxSpeed) this.speed = -this.maxSpeed;
+    else if (this.speed > this.maxSpeed) this.speed = this.maxSpeed;
+    this.y += this.speed * secondsPassed;
+    if (this.y > this.canvas.height / 2 || this.y + this.size < 0)
+      this.create(true);
+    this.draw();
+  }
+
+  draw() {
+    this.ctx.save();
+    this.ctx.globalAlpha = 0.5;
+    this.ctx.drawImage(this.image, this.x, this.y, this.size, this.size);
     this.ctx.restore();
   }
 }

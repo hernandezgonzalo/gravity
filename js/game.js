@@ -3,6 +3,7 @@ const game = {
   ctx: undefined,
   gravityForce: 80,
   cloudsN: 3,
+  snowflakesN: 50,
 
   init() {
     this.canvas = document.getElementById("canvas");
@@ -30,6 +31,9 @@ const game = {
       // game loop
       this.sky.draw(this.ctx, this.canvas);
       if (this.levelN !== 0) {
+        this.snow.forEach(snowflake => {
+          snowflake.update(secondsPassed, this.hero.gravitySpeed);
+        });
         this.clouds.forEach(cloud => {
           cloud.update(secondsPassed);
         });
@@ -101,6 +105,11 @@ const game = {
     this.backgrounds.push(new Background("./img/bg-back.png", 1050, 700));
     this.backgrounds.push(new Background("./img/bg-mid.png", 1100, 733));
     this.backgrounds.push(new Background("./img/bg-front.png", 1150, 767));
+
+    // snow creation
+    this.snow = [];
+    for (let i = 0; i < this.snowflakesN; i++)
+      this.snow.push(new Snowflake(this.canvas, this.ctx));
 
     // clouds creation
     this.clouds = [];
