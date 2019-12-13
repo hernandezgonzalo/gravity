@@ -207,25 +207,34 @@ class Cloud {
   }
 }
 
-class Snowflake {
+class Bubble {
   constructor(canvas, ctx) {
     this.canvas = canvas;
     this.ctx = ctx;
     this.image = new Image();
-    this.image.src = "./img/circle.png";
+    this.image.src = "./img/bubble.png";
     this.minSize = 5;
     this.maxSize = 20;
-    this.maxSpeed = 30;
-    this.speed = this.maxSpeed;
     this.create();
   }
 
   create(outOfBounds = false) {
-    this.size = Math.random() * (this.maxSize - this.minSize) + this.minSize;
+    let randomN = Math.random();
+    this.maxSpeed = randomN * 30;
+    this.opacity = randomN;
+    this.size = randomN * (this.maxSize - this.minSize) + this.minSize;
     if (outOfBounds)
-      if (this.speed > 0) this.y = -this.size;
-      else this.y = this.canvas.height / 2;
-    else this.y = Math.random() * (this.canvas.height / 2);
+      if (this.speed > 0) {
+        this.y = -this.size;
+        this.speed = 1;
+      } else {
+        this.y = this.canvas.height / 2;
+        this.speed = -1;
+      }
+    else {
+      this.y = Math.random() * (this.canvas.height / 2);
+      this.speed = 1;
+    }
     this.x = Math.random() * this.canvas.width;
   }
 
@@ -242,7 +251,7 @@ class Snowflake {
 
   draw() {
     this.ctx.save();
-    this.ctx.globalAlpha = 0.5;
+    this.ctx.globalAlpha = this.opacity;
     this.ctx.drawImage(this.image, this.x, this.y, this.size, this.size);
     this.ctx.restore();
   }

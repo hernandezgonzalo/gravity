@@ -180,7 +180,7 @@ var levels = [
     // level 2
     hero: new Hero(420, 200),
     enemies: [],
-    target: [900, 597],
+    target: [1900, 597],
     bricks: [
       [250, 0],
       [275, 0],
