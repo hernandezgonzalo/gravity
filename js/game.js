@@ -16,7 +16,7 @@ const game = {
     this.sound = new Sound(this);
     this.score = new Score();
     this.intro = new Intro(this.ctx, this.canvas);
-    this.levelN = 1;
+    this.levelN = getParameterByName("level");
     this.deaths = 0;
 
     this.reset();
@@ -188,16 +188,20 @@ const game = {
           character.x < brick[0] + this.level.brickSize &&
           character.x > brick[0]
         ) {
-          character.x = brick[0] + this.level.brickSize + 1;
+          let maxRebound = brick[0] + this.level.brickSize + 1;
+          if (character.x + 5 <= maxRebound) character.x = character.x + 5;
+          else character.x = maxRebound;
           sideCollision = true;
           if (brick[2]) explosiveBrick = true;
         }
         // check if the character is colliding with the left side of a brick
-        if (
+        else if (
           character.x + character.w >= brick[0] &&
           character.x < brick[0] + this.level.brickSize
         ) {
-          character.x = brick[0] - character.w - 1;
+          let maxRebound = brick[0] - character.w - 1;
+          if (character.x - 5 >= maxRebound) character.x = character.x - 5;
+          else character.x = maxRebound;
           sideCollision = true;
           if (brick[2]) explosiveBrick = true;
         }
@@ -237,16 +241,13 @@ const game = {
       // check if the enemy is going to fall and avoid it
       if (
         (character.speed < 0 &&
-          character.x + character.margin /*- this.level.brickSize*/ >=
-            brick[0] &&
+          character.x + character.margin >= brick[0] &&
           character.x + character.margin - this.level.brickSize <=
             brick[0] + this.level.brickSize) ||
         (character.speed > 0 &&
           character.x + character.w - character.margin + this.level.brickSize >=
             brick[0] &&
-          character.x +
-            character.w -
-            character.margin /*+ this.level.brickSize*/ <=
+          character.x + character.w - character.margin <=
             brick[0] + this.level.brickSize)
       ) {
         if (
