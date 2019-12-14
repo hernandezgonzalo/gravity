@@ -109,56 +109,6 @@ class Background {
   }
 }
 
-class Transition {
-  constructor(ctx, canvas) {
-    this.ctx = ctx;
-    this.canvas = canvas;
-    this.opacity = 1;
-    this.speed = 100;
-    this.direction = -1;
-    this.isFadingOut = false;
-  }
-
-  draw(secondsPassed) {
-    this.opacity += (this.speed * this.direction * secondsPassed) / 100;
-    if (this.opacity < 0) this.opacity = 0;
-    else if (this.opacity > 1) this.opacity = 1;
-    if (this.opacity > 0 && this.opacity <= 1) {
-      this.ctx.save();
-      this.ctx.globalAlpha = this.opacity;
-      this.ctx.fillStyle = "#175894";
-      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-      this.ctx.restore();
-    }
-  }
-}
-
-class Score {
-  constructor() {
-    this.targetsImg = new Image();
-    this.targetsImg.src = "./img/score-targets.png";
-    this.deathsImg = new Image();
-    this.deathsImg.src = "./img/score-deaths.png";
-    this.muteImg = new Image();
-    this.muteImg.src = "./img/score-mute.png";
-  }
-
-  draw(ctx, targets, deaths, mute) {
-    ctx.save();
-    ctx.globalAlpha = 0.9;
-    ctx.drawImage(this.targetsImg, 10, 10, 30, 30);
-    ctx.drawImage(this.deathsImg, 90, 10, 30, 30);
-    if (mute) ctx.drawImage(this.muteImg, 960, 10, 30, 30);
-    ctx.font = "40px Kenney High Square";
-    ctx.fillStyle = "#FFFFFF";
-    ctx.textAlign = "left";
-    ctx.textBaseline = "middle";
-    ctx.fillText(targets, 50, 17);
-    ctx.fillText(deaths, 130, 17);
-    ctx.restore();
-  }
-}
-
 class Sky {
   constructor() {}
   draw(ctx, canvas) {
@@ -211,13 +161,13 @@ class Bubble {
   constructor(canvas, ctx) {
     this.canvas = canvas;
     this.ctx = ctx;
-    this.minSize = 5;
-    this.maxSize = 20;
+    this.minSize = 3;
+    this.maxSize = 9;
     this.create();
   }
 
   create(outOfBounds = false) {
-    let randomN = Math.random();
+    let randomN = Math.random() * 0.7 + 0.3;
     this.maxSpeed = randomN * 30;
     this.opacity = randomN * 0.5;
     this.size = randomN * (this.maxSize - this.minSize) + this.minSize;
@@ -226,7 +176,7 @@ class Bubble {
         this.y = -this.size;
         this.speed = 1;
       } else {
-        this.y = this.canvas.height / 2;
+        this.y = this.canvas.height * 0.6;
         this.speed = -1;
       }
     else {
@@ -242,18 +192,75 @@ class Bubble {
     if (this.speed < -this.maxSpeed) this.speed = -this.maxSpeed;
     else if (this.speed > this.maxSpeed) this.speed = this.maxSpeed;
     this.y += this.speed * secondsPassed;
-    if (this.y > this.canvas.height / 2 || this.y + this.size < 0)
+    if (this.y > this.canvas.height * 0.6 || this.y + this.size < 0)
       this.create(true);
     this.draw();
   }
 
   draw() {
     this.ctx.save();
-    this.ctx.fillStyle = "#84F4F4";
-    this.ctx.globalAlpha = this.opacity;
     this.ctx.beginPath();
     this.ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
+
+    this.ctx.fillStyle = "white";
+    this.ctx.globalAlpha = this.opacity;
     this.ctx.fill();
+
+    this.ctx.strokeStyle = "white";
+    this.ctx.lineWidth = this.size;
+    this.ctx.globalAlpha = 0.1;
+    this.ctx.stroke();
+
     this.ctx.restore();
+  }
+}
+
+class Score {
+  constructor() {
+    this.targetsImg = new Image();
+    this.targetsImg.src = "./img/score-targets.png";
+    this.deathsImg = new Image();
+    this.deathsImg.src = "./img/score-deaths.png";
+    this.muteImg = new Image();
+    this.muteImg.src = "./img/score-mute.png";
+  }
+
+  draw(ctx, targets, deaths, mute) {
+    ctx.save();
+    ctx.globalAlpha = 0.9;
+    ctx.drawImage(this.targetsImg, 10, 10, 30, 30);
+    ctx.drawImage(this.deathsImg, 90, 10, 30, 30);
+    if (mute) ctx.drawImage(this.muteImg, 960, 10, 30, 30);
+    ctx.font = "40px Kenney High Square";
+    ctx.fillStyle = "#FFFFFF";
+    ctx.textAlign = "left";
+    ctx.textBaseline = "middle";
+    ctx.fillText(targets, 50, 17);
+    ctx.fillText(deaths, 130, 17);
+    ctx.restore();
+  }
+}
+
+class Transition {
+  constructor(ctx, canvas) {
+    this.ctx = ctx;
+    this.canvas = canvas;
+    this.opacity = 1;
+    this.speed = 100;
+    this.direction = -1;
+    this.isFadingOut = false;
+  }
+
+  draw(secondsPassed) {
+    this.opacity += (this.speed * this.direction * secondsPassed) / 100;
+    if (this.opacity < 0) this.opacity = 0;
+    else if (this.opacity > 1) this.opacity = 1;
+    if (this.opacity > 0 && this.opacity <= 1) {
+      this.ctx.save();
+      this.ctx.globalAlpha = this.opacity;
+      this.ctx.fillStyle = "#175894";
+      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+      this.ctx.restore();
+    }
   }
 }

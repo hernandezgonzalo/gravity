@@ -3,7 +3,7 @@ const game = {
   ctx: undefined,
   gravityForce: 80,
   cloudsN: 3,
-  bubblesN: 50,
+  bubblesN: 30,
 
   init() {
     this.canvas = document.getElementById("canvas");
@@ -44,13 +44,13 @@ const game = {
       this.level.drawBricks(this.ctx);
       this.level.drawTarget(this.ctx, secondsPassed);
       this.keyboard.controller(this.hero, secondsPassed);
-      /*if (this.levelN !== 0)
+      if (this.levelN !== 0)
         this.score.draw(
           this.ctx,
           this.levelN - 1,
           this.deaths,
           this.sound.mute
-        );*/
+        );
       this.update(this.hero, secondsPassed);
       this.enemies.forEach(enemy => {
         if (enemy.alive) {
@@ -102,19 +102,19 @@ const game = {
     // background creation
     this.sky = new Sky();
     this.backgrounds = [];
-    /*this.backgrounds.push(new Background("./img/bg-back.png", 1050, 700));
+    this.backgrounds.push(new Background("./img/bg-back.png", 1050, 700));
     this.backgrounds.push(new Background("./img/bg-mid.png", 1100, 733));
-    this.backgrounds.push(new Background("./img/bg-front.png", 1150, 767));*/
+    this.backgrounds.push(new Background("./img/bg-front.png", 1150, 767));
 
     // bubbles creation
     this.bubbles = [];
-    /*for (let i = 0; i < this.bubblesN; i++)
-    this.bubbles.push(new Bubble(this.canvas, this.ctx));*/
+    for (let i = 0; i < this.bubblesN; i++)
+      this.bubbles.push(new Bubble(this.canvas, this.ctx));
 
     // clouds creation
     this.clouds = [];
-    /*for (let i = 0; i < this.cloudsN; i++)
-      this.clouds.push(new Cloud(this.canvas, this.ctx));*/
+    for (let i = 0; i < this.cloudsN; i++)
+      this.clouds.push(new Cloud(this.canvas, this.ctx));
 
     // characters creation
     this.hero = Object.assign(new Hero(), this.level.hero);
