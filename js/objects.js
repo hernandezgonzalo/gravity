@@ -109,17 +109,6 @@ class Background {
   }
 }
 
-class Sky {
-  constructor() {}
-  draw(ctx, canvas) {
-    var grd = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    grd.addColorStop(0, "#4FC3F7");
-    grd.addColorStop(1, "#84F4F4");
-    ctx.fillStyle = grd;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-  }
-}
-
 class Transition {
   constructor(ctx, canvas) {
     this.ctx = ctx;
@@ -170,6 +159,17 @@ class Score {
   }
 }
 
+class Sky {
+  constructor() {}
+  draw(ctx, canvas) {
+    var grd = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    grd.addColorStop(0, "#4FC3F7");
+    grd.addColorStop(1, "#84F4F4");
+    ctx.fillStyle = grd;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+}
+
 class Cloud {
   constructor(canvas, ctx) {
     this.canvas = canvas;
@@ -211,8 +211,6 @@ class Bubble {
   constructor(canvas, ctx) {
     this.canvas = canvas;
     this.ctx = ctx;
-    this.image = new Image();
-    this.image.src = "./img/bubble.png";
     this.minSize = 5;
     this.maxSize = 20;
     this.create();
@@ -221,7 +219,7 @@ class Bubble {
   create(outOfBounds = false) {
     let randomN = Math.random();
     this.maxSpeed = randomN * 30;
-    this.opacity = randomN;
+    this.opacity = randomN * 0.5;
     this.size = randomN * (this.maxSize - this.minSize) + this.minSize;
     if (outOfBounds)
       if (this.speed > 0) {
@@ -251,8 +249,11 @@ class Bubble {
 
   draw() {
     this.ctx.save();
+    this.ctx.fillStyle = "#84F4F4";
     this.ctx.globalAlpha = this.opacity;
-    this.ctx.drawImage(this.image, this.x, this.y, this.size, this.size);
+    this.ctx.beginPath();
+    this.ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
+    this.ctx.fill();
     this.ctx.restore();
   }
 }
