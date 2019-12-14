@@ -170,6 +170,8 @@ class Bubble {
     let randomN = Math.random() * 0.7 + 0.3;
     this.maxSpeed = randomN * 30;
     this.opacity = randomN * 0.5;
+    this.opacitySpeed = randomN * -0.003;
+    this.maxOpacity = this.opacity;
     this.size = randomN * (this.maxSize - this.minSize) + this.minSize;
     if (outOfBounds)
       if (this.speed > 0) {
@@ -194,6 +196,11 @@ class Bubble {
     this.y += this.speed * secondsPassed;
     if (this.y > this.canvas.height * 0.6 || this.y + this.size < 0)
       this.create(true);
+    this.opacity += this.opacitySpeed;
+    if (this.opacity <= 0 || this.opacity > this.maxOpacity) {
+      this.opacitySpeed = -this.opacitySpeed;
+      this.opacity += this.opacitySpeed;
+    }
     this.draw();
   }
 

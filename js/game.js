@@ -23,7 +23,7 @@ const game = {
     this.reset();
 
     let oldTimeStamp = 0;
-    let gameLoop = timeStamp => {
+    let gameLoop = (timeStamp = 0) => {
       let secondsPassed = (timeStamp - oldTimeStamp) / 1000;
       if (secondsPassed > 0.2) secondsPassed = 0.2; // fixes the game crashes when requestAnimationFrame pauses in the background
       oldTimeStamp = timeStamp;
@@ -70,7 +70,7 @@ const game = {
 
       window.requestAnimationFrame(gameLoop);
     };
-    window.requestAnimationFrame(gameLoop);
+    gameLoop();
   },
 
   screenTransition(secondsPassed) {
