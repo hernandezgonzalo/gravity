@@ -48,12 +48,12 @@ class Enemy extends Character {
     this.speed = 100; // horizontal speed
   }
 
-  walk(secondsPassed) {
+  walk(game, secondsPassed) {
     if (!this.isFlying) {
       this.x += this.speed * secondsPassed;
       this.activeSprite += 0.5; // slow down the animation
       if (this.activeSprite === this.sprites) this.activeSprite = 1;
-      if (game.collision(this)) this.speed = -this.speed;
+      if (game.physics.collision(game, this)) this.speed = -this.speed;
       if (!this.isRotating) {
         if (this.speed > 0) {
           this.isLookingLeft = this.gravitySpeed > 0 ? 0 : 1;

@@ -3,8 +3,11 @@ const levelsToLoad = 3;
 let ref = document.getElementsByTagName("script")[0];
 for (let i = 0; i <= levelsToLoad; i++) {
   let script = document.createElement("script");
+  script.setAttribute("id", `level${i}`);
   script.src = `./js/levels/${i}.js`;
   ref.parentNode.insertBefore(script, ref);
+  let insertedScript = document.getElementById(`level${i}`);
+  insertedScript.parentNode.removeChild(insertedScript);
 }
 
 class Level {
