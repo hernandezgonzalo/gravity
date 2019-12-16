@@ -46,3 +46,5 @@ game.levels.push({
     [750, 450]
   ]
 });
+
+Utilities.loadLevel(game.levels.length); // load next level
