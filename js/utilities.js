@@ -18,4 +18,33 @@ class Utilities {
     let insertedScript = document.getElementById(`level${level}`);
     insertedScript.parentNode.removeChild(insertedScript);
   }
+
+  static loadImages(callback, index = 0) {
+    let imagesRoute = "./img/";
+    let imagesName = [
+      "bg-back.png",
+      "bg-mid.png",
+      "bg-front.png",
+      "cloud.png",
+      "explosive.png",
+      "hero-sprites.png",
+      "score-deaths.png",
+      "score-targets.png",
+      "brick.png",
+      "enemy-sprites.png",
+      "logo.svg",
+      "score-mute.png",
+      "target.png"
+    ];
+
+    let image = new Image();
+    image.onload = () => {
+      console.log(`Image ${index} ${imagesName[index]} loaded`);
+      if (++index < imagesName.length) this.loadImages(callback, index);
+      else callback();
+    };
+    image.src = imagesRoute + imagesName[index];
+
+    return;
+  }
 }

@@ -32,7 +32,7 @@ const game = {
 
       // game loop
       this.sky.draw(this.ctx, this.canvas);
-      /*if (this.levelN !== 0) {
+      if (this.levelN !== 0) {
         this.bubbles.forEach(bubble => {
           bubble.update(secondsPassed, this.hero.gravitySpeed);
         });
@@ -42,17 +42,17 @@ const game = {
       }
       this.backgrounds.forEach(background => {
         background.draw(this.ctx, this.canvas, this.hero);
-      });*/
+      });
       this.level.drawBricks(this.ctx);
       this.level.drawTarget(this.ctx, secondsPassed);
       this.keyboard.controller(this.hero, secondsPassed);
-      /*if (this.levelN !== 0)
+      if (this.levelN !== 0)
         this.score.draw(
           this.ctx,
           this.levelN - 1,
           this.deaths,
           this.sound.mute
-        );*/
+        );
       this.update(this.hero, secondsPassed);
       this.enemies.forEach(enemy => {
         if (enemy.alive) {
@@ -67,7 +67,7 @@ const game = {
         if (!this.level.levelFinished) this.sound.targetPlay();
         this.level.levelFinished = true;
       }
-      /*if (this.levelN === 0) this.intro.run(secondsPassed);*/
+      if (this.levelN === 0) this.intro.run(secondsPassed);
       this.screenTransition(secondsPassed);
 
       window.requestAnimationFrame(gameLoop);

@@ -1,5 +1,8 @@
 Utilities.loadLevel(0);
+Utilities.loadImages(startGame);
 
-window.onload = function() {
-  game.init();
-};
+function startGame() {
+  window.onload = function() {
+    game.init();
+  };
+}
