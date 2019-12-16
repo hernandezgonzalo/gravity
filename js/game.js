@@ -59,7 +59,7 @@ const game = {
           this.update(enemy, secondsPassed);
         }
       });
-      this.physics.enemyCollision(this);
+      this.enemyCollision();
       if (!this.hero.alive && !this.level.levelFinished)
         this.level.resetLevel = true;
       if (this.targetCompleted() && this.hero.alive) {
@@ -117,6 +117,23 @@ const game = {
     this.level.enemies.forEach(enemy => {
       this.enemies.push(Object.assign(new Enemy(), enemy));
     });
+  },
+
+  enemyCollision() {
+    let m = this.hero.margin / 2; //character collision margin
+
+    if (
+      this.enemies.some(
+        enemy =>
+          this.hero.x + this.hero.w - m > enemy.x + m &&
+          enemy.x + enemy.w - m > this.hero.x + m &&
+          this.hero.y + this.hero.h - m > enemy.y + m &&
+          enemy.y + enemy.h - m > this.hero.y + m
+      )
+    ) {
+      if (this.hero.alive && !this.level.levelFinished) this.sound.deathPlay();
+      this.hero.alive = false;
+    }
   },
 
   targetCompleted() {

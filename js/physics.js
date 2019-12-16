@@ -156,25 +156,4 @@ class Physics {
     }
     if (character instanceof Enemy) return sideCollision || fallDown;
   }
-
-  enemyCollision(game) {
-    let hero = game.hero;
-    let enemies = game.enemies;
-    let level = game.level;
-    let sound = game.sound;
-    let m = hero.margin / 2; //character collision margin
-
-    if (
-      enemies.some(
-        enemy =>
-          hero.x + hero.w - m > enemy.x + m &&
-          enemy.x + enemy.w - m > hero.x + m &&
-          hero.y + hero.h - m > enemy.y + m &&
-          enemy.y + enemy.h - m > hero.y + m
-      )
-    ) {
-      if (hero.alive && !level.levelFinished) sound.deathPlay();
-      hero.alive = false;
-    }
-  }
 }
