@@ -1,4 +1,4 @@
-levels.push({
+game.levels.push({
   hero: new Hero(275, 250),
   enemies: [new Enemy(650, 250)],
   target: [720, 405],

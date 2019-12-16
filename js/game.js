@@ -1,6 +1,7 @@
 const game = {
   canvas: undefined,
   ctx: undefined,
+  levels: [],
   gravityForce: 80,
   cloudsN: 3,
   bubblesN: 30,
@@ -18,7 +19,7 @@ const game = {
     this.sound = new Sound(this);
     this.score = new Score();
     this.intro = new Intro(this.ctx, this.canvas);
-    this.levelN = getParameterByName("level");
+    this.levelN = Utilities.getParameterByName("level");
     this.deaths = 0;
 
     this.reset();
@@ -85,13 +86,13 @@ const game = {
 
   reset() {
     // level creation
-    if (levels[this.levelN] === undefined) this.levelN = 0;
+    if (this.levels[this.levelN] === undefined) this.levelN = 0;
     if (this.levelN === 0) {
       this.deaths = 0;
       this.intro.reset();
     }
     if (this.levelN > 0 && !this.sound.mute) this.sound.init();
-    this.level = new Level(levels[this.levelN]);
+    this.level = new Level(this.levels[this.levelN]);
 
     // background creation
     this.sky = new Sky();

@@ -1,4 +1,4 @@
-levels.push({
+game.levels.push({
   hero: new Hero(170, 200),
   enemies: [],
   target: [855, 497],
@@ -49,3 +49,5 @@ levels.push({
     [875, 542]
   ]
 });
+
+Utilities.loadLevel(game.levels.length); // load next level

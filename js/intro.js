@@ -20,7 +20,7 @@ class Intro {
   run(secondsPassed) {
     this.drawLogo(secondsPassed);
     if (this.bound < 0) this.textShow = true;
-    if (this.textShow) this.drawText();
+    this.drawText();
   }
 
   drawLogo(secondsPassed) {
@@ -49,8 +49,10 @@ class Intro {
 
   drawText() {
     this.ctx.save();
-    this.ctx.globalAlpha =
-      this.textOpacity < 100 ? ++this.textOpacity / 100 : 1;
+    if (this.textShow)
+      this.ctx.globalAlpha =
+        this.textOpacity < 100 ? ++this.textOpacity / 100 : 1;
+    else this.ctx.globalAlpha = 0;
     this.ctx.font = "18.5px Kenney Future";
     this.ctx.fillStyle = "#2A88DE";
     this.ctx.textAlign = "center";
