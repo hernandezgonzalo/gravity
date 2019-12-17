@@ -1,6 +1,6 @@
 # Gravity
 
-Gravity is a platform game developed with pure JavaScript as a project for Ironhack. You can play [here](https://hernandezgonzalo.github.io/gravity/).
+Gravity is a platform game developed with pure JavaScript as a project for Ironhack.
 
 ## Goal
 
