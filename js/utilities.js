@@ -39,9 +39,15 @@ class Utilities {
 
     let image = new Image();
     image.onload = () => {
-      console.log(`Image ${index} ${imagesName[index]} loaded`);
-      if (++index < imagesName.length) this.loadImages(callback, index);
-      else callback();
+      index++;
+      let loaded = Math.round((index / imagesName.length) * 100);
+      let loader = document.querySelector("#loading");
+      loader.innerHTML = `${loaded} %`;
+      if (index < imagesName.length) this.loadImages(callback, index);
+      else {
+        loader.classList.toggle("invisible");
+        callback();
+      }
     };
     image.src = imagesRoute + imagesName[index];
 
